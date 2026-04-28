@@ -4,12 +4,12 @@ import { getAuth } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth
 import { getStorage } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-storage.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBrKgBrZbhZu2UlobzZTKzGk4TVUV-s4gI",
-  authDomain: "loja-d15ae.firebaseapp.com",
-  projectId: "loja-d15ae",
-  storageBucket: "loja-d15ae.firebasestorage.app",
-  messagingSenderId: "328906035910",
-  appId: "1:328906035910:web:7df2c409744e45c021bdc7"
+  apiKey: "AIzaSyA-SNfY_hU9uRzApJTjI3RzNnr_ZDLoBfM",
+  authDomain: "beyou-loja.firebaseapp.com",
+  projectId: "beyou-loja",
+  storageBucket: "beyou-loja.firebasestorage.app",
+  messagingSenderId: "597162179913",
+  appId: "1:597162179913:web:33e52f9271b49bdd1eee98"
 };
 
 const app = initializeApp(firebaseConfig);
