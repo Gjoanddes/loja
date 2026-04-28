@@ -242,7 +242,7 @@
     try {
       var usuario = await login(email, senha);
       var ehAdmin = await verificarAdmin(usuario.uid);
-      window.location.href = ehAdmin ? '/admin.html' : '/index.html';
+      window.location.href = ehAdmin ? '/loja/admin.html' : '/loja/index.html';
     } catch(err) {
       erro.textContent = err.message;
       erro.classList.add('show');
