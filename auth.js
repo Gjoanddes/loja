@@ -60,7 +60,7 @@ export function protegerPaginaAdmin() {
     const ehAdmin = await verificarAdmin(usuario.uid);
     if (!ehAdmin) {
       alert("Acesso negado.");
-      window.location.href = "/index.html";
+      window.location.href = '/loja/index.html';
     }
   });
 }
