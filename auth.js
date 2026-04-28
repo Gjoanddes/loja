@@ -31,7 +31,7 @@ export async function login(email, senha) {
 
 export async function logout() {
   await signOut(auth);
-  window.location.href = "/login.html";
+  window.location.href = '/loja/login.html';
 }
 
 export async function verificarAdmin(uid) {
@@ -54,7 +54,7 @@ export function observarLogin(callback) {
 export function protegerPaginaAdmin() {
   onAuthStateChanged(auth, async (usuario) => {
     if (!usuario) {
-      window.location.href = "/login.html";
+      window.location.href = '/loja/login.html';
       return;
     }
     const ehAdmin = await verificarAdmin(usuario.uid);

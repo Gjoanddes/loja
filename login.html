@@ -214,7 +214,7 @@
     <button class="btn btn-primary" id="btn-cadastro" onclick="fazerCadastro()">Criar conta</button>
     <div class="erro" id="erro-cadastro"></div>
   </div>
-  <div class="voltar"><a href="/index.html">Voltar para a loja</a></div>
+  <div class="voltar"><a href="/loja/index.html">Voltar para a loja</a></div>
 </div>
 <script type="module">
   import { login, cadastrarUsuario, verificarAdmin } from "./auth.js";
@@ -267,7 +267,7 @@
     erro.classList.remove('show');
     try {
       await cadastrarUsuario(nome, email, senha);
-      window.location.href = '/index.html';
+      window.location.href = '/loja/index.html';
     } catch(err) {
       erro.textContent = err.message;
       erro.classList.add('show');
