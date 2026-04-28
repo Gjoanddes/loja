@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BeYou — Streetwear</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Syne:wght@700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root[data-theme="light"] {
+      --bg: #fdfbf7;
+      --bg2: #f5f0e8;
+      --surface: #ffffff;
+      --border: #e0d8c8;
+      --text: #000000;
+      --muted: #000000;
+      --accent: #8b5a2b;
+      --accent2: #a0522d;
+      --card-bg: #ffffff;
+      --hover-border: 4px;
+    }
+
+    :root[data-theme="dark"] {
+      --bg: #121212;
+      --bg2: #1e1e1e;
+      --surface: #1e1e1e;
+      --border: #4b4a4a;
+      --text: #f5f5f5;
+      --muted: #aaaaaa;
+      --accent: #8b5a2b;
+      --accent2: #a0522d;
+      --card-bg: #1e1e1e;
+      --hover-border: 2px;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* ANNOUNCEMENT BAR */
+    .announcement {
+      background: #8b5a2b;
+      color: white;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 8px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* NAVBAR */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      padding: 0 40px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background 0.3s;
+    }
+
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .nav-logo span {
+      color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    .nav-links a.ofertas {
+      color: var(--accent);
+    }
+
+    .nav-icons {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .nav-icon {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text);
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      transition: background 0.2s;
+      font-size: 16px;
+      text-decoration: none;
+    }
+
+    .nav-icon:hover {
+      background: var(--border);
+    }
+
+    /* ACCOUNT DROPDOWN */
+    .account-dropdown-container {
+      position: relative;
+    }
+
+    .account-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      width: 200px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: all 0.2s ease;
+      z-index: 200;
+      overflow: hidden;
+    }
+
+    .account-menu.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .account-menu-header {
+      padding: 16px 20px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text);
+      border-bottom: 1px solid var(--border);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .account-menu-item {
+      display: block;
+      padding: 12px 20px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .account-menu-item:hover {
+      background: var(--bg2);
+      color: var(--accent);
+      padding-left: 24px;
+    }
+
+    .account-menu-item:last-child {
+      margin-bottom: 8px;
+    }
+
+    .cart-badge {
+      position: relative;
+    }
+
+    .cart-badge::after {
+      content: '0';
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: #8b5a2b;
+      color: white;
+      font-size: 9px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--text);
+      transition: all 0.3s;
+    }
+
+    /* MOBILE MENU */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--bg);
+      z-index: 200;
+      flex-direction: column;
+      padding: 80px 32px 32px;
+    }
+
+    .mobile-menu.open {
+      display: flex;
+    }
+
+    .mobile-menu-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 28px;
+      cursor: pointer;
+    }
+
+    .mobile-menu a {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 48px;
+      color: var(--text);
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+      padding: 12px 0;
+      letter-spacing: 1px;
+      transition: color 0.2s;
+    }
+
+    .mobile-menu a:hover {
+      color: var(--accent);
+    }
+
+    /* HERO */
+    .hero {
+      height: 90vh;
+      min-height: 500px;
+      background: linear-gradient(135deg, #2c1810 0%, #4a2c1a 50%, #2c1810 100%);
+      display: flex;
+      align-items: flex-end;
+      padding: 60px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 70% 50%, rgba(255, 60, 95, 0.15) 0%, transparent 60%);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 700px;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: #8b5a2b;
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(64px, 12vw, 140px);
+      line-height: 0.9;
+      letter-spacing: 2px;
+      color: var(--text);
+      margin-bottom: 24px;
+    }
+
+    .hero h1 span {
+      color: var(--accent);
+    }
+
+    .hero p {
+      font-size: 16px;
+      color: var(--muted);
+      margin-bottom: 32px;
+      max-width: 400px;
+      line-height: 1.6;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-hero {
+      padding: 14px 32px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+      letter-spacing: 0.04em;
+    }
+
+    .btn-hero-primary {
+      background: #8b5a2b;
+      color: white;
+      border: none;
+    }
+
+    .btn-hero-primary:hover {
+      opacity: 0.85;
+      transform: translateY(-2px);
+    }
+
+    .btn-hero-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-hero-secondary:hover {
+      border-color: var(--text);
+    }
+
+    /* BENEFITS */
+    .benefits {
+      border-bottom: 1px solid var(--border);
+      padding: 20px 40px;
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+    }
+
+    .benefit {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 40px;
+      border-right: 1px solid var(--border);
+      min-width: 180px;
+      white-space: nowrap;
+    }
+
+    .benefit:first-child {
+      padding-left: 0;
+    }
+
+    .benefit:last-child {
+      border-right: none;
+    }
+
+    .benefit-icon {
+      font-size: 20px;
+    }
+
+    .benefit-text {
+      font-size: 12px;
+    }
+
+    .benefit-text strong {
+      display: block;
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .benefit-text span {
+      color: var(--muted);
+    }
+
+    /* SECTION */
+    .section {
+      padding: 60px 40px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 32px;
+    }
+
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .ver-tudo {
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .ver-tudo:hover {
+      color: var(--text);
+    }
+
+    /* PRODUCTS GRID */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+
+    .product-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s, border-color 0.2s;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .product-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--accent);
+      border-width: var(--hover-border);
+      box-shadow: 0 12px 24px rgba(139, 90, 43, 0.25);
+    }
+
+    .product-img {
+      width: 100%;
+      aspect-ratio: 3/4;
+      background: var(--bg2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 13px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .product-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .product-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: #8b5a2b;
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.05em;
+    }
+
+    .product-info {
+      padding: 14px;
+    }
+
+    .product-name {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .product-price {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .product-price-old {
+      font-size: 12px;
+      color: var(--muted);
+      text-decoration: line-through;
+      margin-right: 6px;
+    }
+
+    .product-parcel {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .product-btn {
+      width: 100%;
+      padding: 10px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+      border-radius: 6px;
+      transition: all 0.2s;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .product-btn:hover {
+      background: #8b5a2b;
+      border-color: var(--accent);
+      color: white;
+    }
+
+    /* EMPTY STATE */
+    .empty-products {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 60px;
+      color: var(--muted);
+    }
+
+    .empty-products h3 {
+      font-size: 18px;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    /* CATEGORIES BANNER */
+    .categories-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .category-banner {
+      position: relative;
+      aspect-ratio: 16/9;
+      background: var(--bg2);
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      align-items: flex-end;
+      padding: 24px;
+      border: var(--hover-border) solid transparent;
+      transition: all 0.3s ease;
+    }
+
+    .category-banner:hover {
+      border-color: var(--accent);
+      transform: translateY(-6px);
+      box-shadow: 0 15px 30px rgba(139, 90, 43, 0.35);
+    }
+
+    .category-banner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 60%);
+    }
+
+    .category-banner-text {
+      position: relative;
+      z-index: 1;
+    }
+
+    .category-banner-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 36px;
+      color: white;
+      letter-spacing: 2px;
+    }
+
+    .category-banner-sub {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.7);
+      margin-top: 2px;
+    }
+
+    .cat-roupas {
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+    }
+
+    .cat-acessorios {
+      background: linear-gradient(135deg, #0f3460, #533483);
+    }
+
+    /* FOOTER */
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 60px 40px 30px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+
+    .footer-logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    .footer-logo span {
+      color: var(--accent);
+    }
+
+    .footer-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .footer-socials {
+      display: flex;
+      gap: 12px;
+    }
+
+    .footer-social {
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .footer-social:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .footer-col h4 {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col ul li {
+      margin-bottom: 8px;
+    }
+
+    .footer-col ul li a {
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-col ul li a:hover {
+      color: var(--text);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid var(--border);
+      padding-top: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* THEME TOGGLE */
+    .theme-toggle {
+      background: var(--border);
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      cursor: pointer;
+      color: var(--text);
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .theme-toggle:hover {
+      background: #8b5a2b;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) {
+      .products-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      nav {
+        padding: 0 20px;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+
+      .hero {
+        padding: 40px 20px;
+        height: 70vh;
+      }
+
+      .benefits {
+        padding: 16px 20px;
+      }
+
+      .section {
+        padding: 40px 20px;
+      }
+
+      .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+
+      .categories-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      footer {
+        padding: 40px 20px 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .hero h1 {
+        font-size: 56px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ANNOUNCEMENT -->
+  <div class="announcement">Envios para todo o Brasil — Frete gratis acima de R$ 299</div>
+
+  <!-- NAVBAR -->
+  <nav>
+    <a href="/index.html" class="nav-logo">Be<span>You</span></a>
+    <ul class="nav-links">
+      <li><a href="#">Shop</a></li>
+      <li><a href="#">Roupas</a></li>
+      <li><a href="#">Acessorios</a></li>
+      <li><a href="#">Novidades</a></li>
+      <li><a href="#" class="ofertas">Ofertas</a></li>
+    </ul>
+    <div class="nav-icons">
+      <button class="theme-toggle" onclick="toggleTheme()" title="Alternar tema">🌙</button>
+
+      <div class="account-dropdown-container">
+        <button class="nav-icon" title="Minha conta" onclick="toggleAccountMenu()">👤</button>
+        <div class="account-menu" id="accountMenu">
+          <div class="account-menu-header">Minha Conta</div>
+          <a href="/login.html" class="account-menu-item">Fazer Login / Cadastro</a>
+          <a href="#" class="account-menu-item">Meus Pedidos</a>
+          <a href="#" class="account-menu-item">Lista de Desejos</a>
+          <a href="#" class="account-menu-item">Configurações de Conta</a>
+        </div>
+      </div>
+      <button class="nav-icon cart-badge" title="Carrinho">🛒</button>
+      <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-menu-close" onclick="toggleMenu()">×</button>
+    <a href="#" onclick="toggleMenu()">Shop</a>
+    <a href="#" onclick="toggleMenu()">Roupas</a>
+    <a href="#" onclick="toggleMenu()">Acessorios</a>
+    <a href="#" onclick="toggleMenu()">Novidades</a>
+    <a href="#" onclick="toggleMenu()" style="color:var(--accent)">Ofertas</a>
+    <a href="/login.html" onclick="toggleMenu()">Minha Conta</a>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <span class="hero-tag">Nova Colecao 2026</span>
+      <h1>BE<br><span>YOU</span><br>SEMPRE</h1>
+      <p>Moda que fala a sua lingua. Streetwear autentico para quem nao tem medo de ser diferente.</p>
+      <div class="hero-btns">
+        <a href="#novidades" class="btn-hero btn-hero-primary">Ver Colecao</a>
+        <a href="#categorias" class="btn-hero btn-hero-secondary">Explorar</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- BENEFITS -->
+  <div class="benefits">
+    <div class="benefit">
+      <span class="benefit-icon">🔒</span>
+      <div class="benefit-text">
+        <strong>Compra Segura</strong>
+        <span>Pagamento protegido</span>
+      </div>
+    </div>
+    <div class="benefit">
+      <span class="benefit-icon">🚚</span>
+      <div class="benefit-text">
+        <strong>Envio Rapido</strong>
+        <span>Para todo o Brasil</span>
+      </div>
+    </div>
+    <div class="benefit">
+      <span class="benefit-icon">↩️</span>
+      <div class="benefit-text">
+        <strong>Troca Facil</strong>
+        <span>30 dias para trocar</span>
+      </div>
+    </div>
+    <div class="benefit">
+      <span class="benefit-icon">💳</span>
+      <div class="benefit-text">
+        <strong>Parcelamento</strong>
+        <span>Em ate 6x sem juros</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOVIDADES -->
+  <section class="section" id="novidades">
+    <div class="section-header">
+      <h2 class="section-title">Novidades</h2>
+      <a href="#" class="ver-tudo">Ver tudo →</a>
+    </div>
+    <div class="products-grid" id="products-container">
+      <div class="empty-products">
+        <h3>Em breve</h3>
+        <p>Os produtos estao sendo cadastrados pelo admin.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORIAS -->
+  <section class="section" id="categorias">
+    <div class="section-header">
+      <h2 class="section-title">Categorias</h2>
+    </div>
+    <div class="categories-grid">
+      <a href="#" class="category-banner cat-roupas">
+        <div class="category-banner-text">
+          <div class="category-banner-title">Roupas</div>
+          <div class="category-banner-sub">Camisetas, calcas, moletons e mais</div>
+        </div>
+      </a>
+      <a href="#" class="category-banner cat-acessorios">
+        <div class="category-banner-text">
+          <div class="category-banner-title">Acessorios</div>
+          <div class="category-banner-sub">Bones, bolsas, cintos e mais</div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">Be<span>You</span></div>
+        <p class="footer-desc">Streetwear autentico para quem nao tem medo de ser diferente. Moda jovem, atitude real.
+        </p>
+        <div class="footer-socials">
+          <a href="#" class="footer-social">📷</a>
+          <a href="#" class="footer-social">💬</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Loja</h4>
+        <ul>
+          <li><a href="#">Shop</a></li>
+          <li><a href="#">Roupas</a></li>
+          <li><a href="#">Acessorios</a></li>
+          <li><a href="#">Novidades</a></li>
+          <li><a href="#" style="color:var(--accent)">Ofertas</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Ajuda</h4>
+        <ul>
+          <li><a href="#">Minha Conta</a></li>
+          <li><a href="#">Meus Pedidos</a></li>
+          <li><a href="#">Trocas</a></li>
+          <li><a href="#">Envio</a></li>
+          <li><a href="#">Contato</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Institucional</h4>
+        <ul>
+          <li><a href="#">Sobre nos</a></li>
+          <li><a href="#">Privacidade</a></li>
+          <li><a href="#">Termos</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 BeYou. Todos os direitos reservados.</span>
+      <span>Feito com 🔥</span>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { getProdutosDestaque } from "./db-structure.js";
+
+    async function carregarProdutos() {
+      const container = document.getElementById('products-container');
+      const produtos = await getProdutosDestaque();
+      if (!produtos || produtos.length === 0) return;
+
+      container.innerHTML = produtos.map(p => `
+      <div class="product-card">
+        <div class="product-img">
+          ${p.imagens && p.imagens[0]
+          ? `<img src="${p.imagens[0]}" alt="${p.nome}">`
+          : 'Sem imagem'}
+          ${p.precoPromocional ? `<span class="product-badge">SALE</span>` : ''}
+        </div>
+        <div class="product-info">
+          <div class="product-name">${p.nome}</div>
+          <div>
+            ${p.precoPromocional
+          ? `<span class="product-price-old">R$ ${Number(p.preco).toFixed(2).replace('.', ',')}</span>`
+          : ''}
+            <span class="product-price">R$ ${Number(p.precoPromocional || p.preco).toFixed(2).replace('.', ',')}</span>
+          </div>
+          <div class="product-parcel">6x de R$ ${(Number(p.precoPromocional || p.preco) / 6).toFixed(2).replace('.', ',')} sem juros</div>
+          <button class="product-btn">Comprar</button>
+        </div>
+      </div>
+    `).join('');
+    }
+
+    carregarProdutos();
+  </script>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      document.querySelector('.theme-toggle').textContent = next === 'dark' ? '🌙' : '☀️';
+      localStorage.setItem('theme', next);
+    }
+
+    function toggleMenu() {
+      document.getElementById('mobileMenu').classList.toggle('open');
+    }
+
+    // Restore theme
+    const saved = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', saved);
+    document.querySelector('.theme-toggle').textContent = saved === 'dark' ? '🌙' : '☀️';
+    // Toggle Account Menu
+    window.toggleAccountMenu = function () {
+      document.getElementById('accountMenu').classList.toggle('show');
+    };
+
+    // Fechar menu ao clicar fora
+    document.addEventListener('click', function (event) {
+      const container = document.querySelector('.account-dropdown-container');
+      const menu = document.getElementById('accountMenu');
+      if (container && menu && !container.contains(event.target)) {
+        menu.classList.remove('show');
+      }
+    });
+  </script>
+
+</body>
+
+</html>
