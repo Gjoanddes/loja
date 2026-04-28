@@ -98,6 +98,45 @@
       display: flex;
       gap: 32px;
       list-style: none;
+      height: 100%;
+    }
+
+    .nav-links li {
+      position: relative;
+      height: 64px;
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%) translateY(-10px);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      width: 220px;
+      min-height: 120px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.2s ease;
+      z-index: 200;
+      padding: 16px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-links li:hover .nav-dropdown {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
     }
 
     .nav-links a {
@@ -832,11 +871,26 @@
   <nav>
     <a href="/index.html" class="nav-logo">Be<span>You</span></a>
     <ul class="nav-links">
-      <li><a href="#">Shop</a></li>
-      <li><a href="#">Roupas</a></li>
-      <li><a href="#">Acessorios</a></li>
-      <li><a href="#">Novidades</a></li>
-      <li><a href="#" class="ofertas">Ofertas</a></li>
+      <li>
+        <a href="#">Shop</a>
+        <div class="nav-dropdown">Conteúdo futuro: Shop</div>
+      </li>
+      <li>
+        <a href="#">Roupas</a>
+        <div class="nav-dropdown">Conteúdo futuro: Roupas</div>
+      </li>
+      <li>
+        <a href="#">Acessorios</a>
+        <div class="nav-dropdown">Conteúdo futuro: Acessórios</div>
+      </li>
+      <li>
+        <a href="#">Novidades</a>
+        <div class="nav-dropdown">Conteúdo futuro: Novidades</div>
+      </li>
+      <li>
+        <a href="#" class="ofertas">Ofertas</a>
+        <div class="nav-dropdown">Conteúdo futuro: Ofertas</div>
+      </li>
     </ul>
     <div class="nav-icons">
       <button class="theme-toggle" onclick="toggleTheme()" title="Alternar tema">🌙</button>
