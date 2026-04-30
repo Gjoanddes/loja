@@ -1,3 +1,668 @@
+<!-- ========================================== -->
+<!-- ARQUIVO 1: admin.html[cite: 27]           -->
+<!-- ========================================== -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel Admin — BeYou</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #0f0f0f;
+      --surface: #1a1a1a;
+      --surface2: #242424;
+      --border: #2e2e2e;
+      --accent: #ff5c5c;
+      --accent2: #ff8c42;
+      --text: #f0f0f0;
+      --muted: #888;
+      --success: #4caf82;
+      --danger: #ff4444;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .logo {
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: -0.5px;
+    }
+
+    .logo span {
+      color: var(--accent);
+    }
+
+    .admin-badge {
+      background: var(--accent);
+      color: white;
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+      margin-left: 10px;
+    }
+
+    .btn-logout {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 7px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+
+    .btn-logout:hover {
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+
+    /* LAYOUT */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 24px;
+    }
+
+    /* STATS */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .stat-value.accent {
+      color: var(--accent);
+    }
+
+    /* SEÇÃO */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    /* BOTÃO PRIMÁRIO */
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: opacity 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.85;
+    }
+
+    /* FORMULÁRIO */
+    .form-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px;
+      margin-bottom: 32px;
+      display: none;
+    }
+
+    .form-card.aberto {
+      display: block;
+    }
+
+    .form-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    input,
+    select,
+    textarea {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+      font-family: inherit;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--accent);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    select option {
+      background: var(--surface2);
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .btn-cancel {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .btn-cancel:hover {
+      border-color: var(--text);
+      color: var(--text);
+    }
+
+    /* LISTA DE PRODUTOS */
+    .produtos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    .produto-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+
+    .produto-card:hover {
+      border-color: #444;
+    }
+
+    .produto-img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      background: var(--surface2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .produto-info {
+      padding: 14px;
+    }
+
+    .produto-nome {
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .produto-cat {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .produto-preco {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .produto-acoes {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .btn-editar,
+    .btn-remover {
+      flex: 1;
+      padding: 7px;
+      border-radius: 7px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .btn-editar {
+      background: transparent;
+      color: var(--text);
+    }
+
+    .btn-editar:hover {
+      border-color: var(--accent2);
+      color: var(--accent2);
+    }
+
+    .btn-remover {
+      background: transparent;
+      color: var(--muted);
+    }
+
+    .btn-remover:hover {
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+
+    /* TAG DESTAQUE */
+    .tag-destaque {
+      display: inline-block;
+      background: var(--accent2);
+      color: white;
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-weight: 600;
+      margin-left: 6px;
+    }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--success);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.3s;
+      z-index: 100;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .toast.erro {
+      background: var(--danger);
+    }
+
+    /* VAZIO */
+    .vazio {
+      text-align: center;
+      padding: 60px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 600px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      header {
+        padding: 0 16px;
+      }
+
+      .container {
+        padding: 20px 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div style="display:flex;align-items:center;">
+      <div class="logo">Be<span>You</span></div>
+      <span class="admin-badge">ADMIN</span>
+    </div>
+    <button class="btn-logout" onclick="fazerLogout()">Sair</button>
+  </header>
+
+  <div class="container">
+
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-label">Total de produtos</div>
+        <div class="stat-value accent" id="total-produtos">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Roupas</div>
+        <div class="stat-value" id="total-roupas">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Acessórios</div>
+        <div class="stat-value" id="total-acessorios">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Em destaque</div>
+        <div class="stat-value" id="total-destaque">—</div>
+      </div>
+    </div>
+
+    <!-- Header da seção -->
+    <div class="section-header">
+      <div class="section-title">Produtos</div>
+      <button class="btn-primary" onclick="toggleFormulario()">
+        + Adicionar produto
+      </button>
+    </div>
+
+    <!-- Formulário de adicionar produto -->
+    <div class="form-card" id="form-produto">
+      <div class="form-title" id="form-titulo">Novo produto</div>
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label>Nome do produto *</label>
+          <input type="text" id="p-nome" placeholder="Ex: Camiseta Tie-Dye Oversized">
+        </div>
+
+        <div class="form-group">
+          <label>Preço (R$) *</label>
+          <input type="number" id="p-preco" placeholder="89.90" step="0.01">
+        </div>
+
+        <div class="form-group">
+          <label>Preço promocional (R$)</label>
+          <input type="number" id="p-preco-promo" placeholder="Opcional" step="0.01">
+        </div>
+
+        <div class="form-group">
+          <label>Categoria *</label>
+          <select id="p-categoria" onchange="atualizarSubcategorias()">
+            <option value="">Selecione...</option>
+            <option value="roupas">Roupas</option>
+            <option value="acessorios">Acessórios</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Subcategoria</label>
+          <select id="p-subcategoria">
+            <option value="">Selecione a categoria primeiro</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Tamanhos disponíveis</label>
+          <input type="text" id="p-tamanhos" placeholder="PP, P, M, G, GG (separados por vírgula)">
+        </div>
+
+        <div class="form-group full">
+          <label>Descrição</label>
+          <textarea id="p-descricao" placeholder="Descreva o produto..."></textarea>
+        </div>
+
+        <div class="form-group full">
+          <label>Imagens do produto</label>
+          <input type="file" id="p-imagens" accept="image/*" multiple>
+        </div>
+
+        <div class="form-group" style="align-items:flex-start;justify-content:center;padding-top:22px;">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+            <input type="checkbox" id="p-destaque" style="width:16px;height:16px;">
+            Exibir na home (destaque)
+          </label>
+        </div>
+
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-primary" onclick="salvarProduto()">Salvar produto</button>
+        <button class="btn-cancel" onclick="toggleFormulario()">Cancelar</button>
+      </div>
+    </div>
+
+    <!-- Grid de produtos -->
+    <div class="produtos-grid" id="lista-produtos">
+      <div class="vazio">Carregando produtos...</div>
+    </div>
+
+  </div>
+
+  <!-- Toast de feedback -->
+  <div class="toast" id="toast"></div>
+
+  <script type="module">
+    import { protegerPaginaAdmin, logout } from "./auth.js";
+    import {
+      getProdutos, adicionarProduto, removerProduto
+    } from "./db-structure.js";
+
+    // Protege a página: só admin entra
+    protegerPaginaAdmin();
+
+    // Expõe funções globalmente para os onclick do HTML
+    window.fazerLogout = logout;
+
+    let produtos = [];
+    let formularioAberto = false;
+
+    // Subcategorias por categoria
+    const subcategorias = {
+      roupas: ["Camisetas", "Calças", "Shorts", "Vestidos", "Moletons", "Casacos", "Blusas"],
+      acessorios: ["Bonés", "Bolsas", "Cintos", "Meias", "Óculos", "Colares", "Pulseiras"]
+    };
+
+    // Carrega produtos ao abrir a página
+    carregarProdutos();
+
+    async function carregarProdutos() {
+      produtos = await getProdutos();
+      renderizarProdutos(produtos);
+      atualizarStats();
+    }
+
+    function atualizarStats() {
+      document.getElementById("total-produtos").textContent = produtos.length;
+      document.getElementById("total-roupas").textContent =
+        produtos.filter(p => p.categoria === "roupas").length;
+      document.getElementById("total-acessorios").textContent =
+        produtos.filter(p => p.categoria === "acessorios").length;
+      document.getElementById("total-destaque").textContent =
+        produtos.filter(p => p.destaque).length;
+    }
+
+    function renderizarProdutos(lista) {
+      const container = document.getElementById("lista-produtos");
+      if (lista.length === 0) {
+        container.innerHTML = '<div class="vazio">Nenhum produto cadastrado ainda.</div>';
+        return;
+      }
+      container.innerHTML = lista.map(p => `
+      <div class="produto-card">
+        <div class="produto-img">
+          ${p.imagens?.[0]
+          ? `<img src="${p.imagens[0]}" style="width:100%;height:100%;object-fit:cover;">`
+          : "Sem imagem"}
+        </div>
+        <div class="produto-info">
+          <div class="produto-nome">
+            ${p.nome}
+            ${p.destaque ? '<span class="tag-destaque">⭐ destaque</span>' : ""}
+          </div>
+          <div class="produto-cat">${p.categoria} · ${p.subcategoria || ""}</div>
+          <div class="produto-preco">R$ ${Number(p.preco).toFixed(2).replace(".", ",")}</div>
+          <div class="produto-acoes">
+            <button class="btn-editar" onclick="editarProduto('${p.id}')">Editar</button>
+            <button class="btn-remover" onclick="confirmarRemocao('${p.id}', '${p.nome}')">Remover</button>
+          </div>
+        </div>
+      </div>
+    `).join("");
+    }
+
+    window.toggleFormulario = () => {
+      formularioAberto = !formularioAberto;
+      document.getElementById("form-produto").classList.toggle("aberto", formularioAberto);
+    };
+
+    window.atualizarSubcategorias = () => {
+      const cat = document.getElementById("p-categoria").value;
+      const sub = document.getElementById("p-subcategoria");
+      sub.innerHTML = cat
+        ? subcategorias[cat].map(s => `<option value="${s.toLowerCase()}">${s}</option>`).join("")
+        : '<option>Selecione a categoria primeiro</option>';
+    };
+
+    window.salvarProduto = async () => {
+      const nome = document.getElementById("p-nome").value.trim();
+      const preco = parseFloat(document.getElementById("p-preco").value);
+      const categoria = document.getElementById("p-categoria").value;
+
+      if (!nome || !preco || !categoria) {
+        mostrarToast("Preencha os campos obrigatórios!", true);
+        return;
+      }
+
+      const produto = {
+        nome,
+        preco,
+        precoPromocional: parseFloat(document.getElementById("p-preco-promo").value) || null,
+        categoria,
+        subcategoria: document.getElementById("p-subcategoria").value,
+        tamanhos: document.getElementById("p-tamanhos").value.split(",").map(s => s.trim()).filter(Boolean),
+        descricao: document.getElementById("p-descricao").value.trim(),
+        destaque: document.getElementById("p-destaque").checked
+      };
+
+      const arquivos = document.getElementById("p-imagens").files;
+
+      try {
+        await adicionarProduto(produto, arquivos);
+        mostrarToast("Produto adicionado com sucesso!");
+        toggleFormulario();
+        carregarProdutos();
+      } catch (err) {
+        mostrarToast("Erro ao salvar: " + err.message, true);
+      }
+    };
+
+    window.confirmarRemocao = (id, nome) => {
+      if (confirm(`Remover "${nome}"? O produto ficará inativo.`)) {
+        removerProduto(id)
+          .then(() => { mostrarToast("Produto removido!"); carregarProdutos(); })
+          .catch(() => mostrarToast("Erro ao remover.", true));
+      }
+    };
+
+    window.editarProduto = (id) => {
+      // Abre o formulário de edição (pode ser expandido depois)
+      mostrarToast("Edição em breve! Por enquanto remova e recadastre.");
+    };
+
+    function mostrarToast(msg, erro = false) {
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.className = "toast show" + (erro ? " erro" : "");
+      setTimeout(() => t.className = "toast", 3000);
+    }
+  </script>
+
+</body>
+
+</html>
+
+<hr>
+
+<!-- ========================================== -->
+<!-- ARQUIVO 2: index.html[cite: 28]           -->
+<!-- ========================================== -->
 <!DOCTYPE html>
 <html lang="pt-BR" data-theme="light">
 
@@ -1119,4 +1784,306 @@
 
 </body>
 
+</html>
+
+<hr>
+
+<!-- ========================================== -->
+<!-- ARQUIVO 3: login.html[cite: 29]           -->
+<!-- ========================================== -->
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<script>
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+</script>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - BeYou</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root[data-theme="light"] {
+      --bg: #fdfbf7;
+      --surface: #ffffff;
+      --border: #e0d8c8;
+      --accent: #8b5a2b;
+      --accent2: #a0522d;
+      --text: #332b22;
+      --muted: #8a7b66;
+    }
+    :root[data-theme="dark"] {
+      --bg: #121212;
+      --surface: #1e1e1e;
+      --border: #4b4a4a;
+      --accent: #8b5a2b;
+      --accent2: #a0522d;
+      --text: #f5f5f5;
+      --muted: #aaaaaa;
+    }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .bg-blob {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.15;
+      animation: float 8s ease-in-out infinite;
+      pointer-events: none;
+    }
+    .blob1 { width: 400px; height: 400px; background: var(--accent); top: -100px; right: -100px; }
+    .blob2 { width: 300px; height: 300px; background: var(--accent2); bottom: -80px; left: -80px; animation-delay: 3s; }
+    @keyframes float {
+      0%, 100% { transform: translate(0,0) scale(1); }
+      50% { transform: translate(20px,-20px) scale(1.05); }
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 48px 40px;
+      width: 100%;
+      max-width: 420px;
+      position: relative;
+      z-index: 1;
+    }
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 8px;
+    }
+    .logo span { color: var(--accent); }
+    .subtitle { font-size: 14px; color: var(--muted); margin-bottom: 36px; }
+    .tabs {
+      display: flex;
+      background: var(--bg);
+      border-radius: 10px;
+      padding: 4px;
+      margin-bottom: 28px;
+    }
+    .tab {
+      flex: 1;
+      padding: 10px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 500;
+      border-radius: 7px;
+      cursor: pointer;
+      color: var(--muted);
+      transition: all 0.2s;
+      border: none;
+      background: transparent;
+    }
+    .tab.active {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .form { display: none; }
+    .form.active { display: block; }
+    .form-group { margin-bottom: 16px; }
+    label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    input {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 13px 16px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input:focus { border-color: var(--accent); }
+    input::placeholder { color: var(--muted); }
+    .btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: 10px;
+      border: none;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: 'Syne', sans-serif;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: all 0.2s;
+    }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-primary:hover { opacity: 0.88; }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .erro {
+      background: rgba(255,60,95,0.1);
+      border: 1px solid rgba(255,60,95,0.3);
+      color: #ff3c5f;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      margin-top: 12px;
+      display: none;
+    }
+    .erro.show { display: block; }
+    .voltar { text-align: center; margin-top: 20px; font-size: 13px; color: var(--muted); }
+    .voltar a { color: var(--accent); text-decoration: none; font-weight: 500; }
+    .theme-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      cursor: pointer;
+      color: var(--text);
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      z-index: 10;
+    }
+    .theme-toggle:hover {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()" title="Alternar tema">🌙</button>
+<div class="bg-blob blob1"></div>
+<div class="bg-blob blob2"></div>
+<div class="card">
+  <div class="logo">Be<span>You</span></div>
+  <div class="subtitle">Bem-vindo de volta!</div>
+  <div class="tabs">
+    <button class="tab active" id="tab-entrar" onclick="trocarAba('login', this)">Entrar</button>
+    <button class="tab" id="tab-cadastro" onclick="trocarAba('cadastro', this)">Cadastrar</button>
+  </div>
+  <div class="form active" id="form-login">
+    <div class="form-group">
+      <label>E-mail</label>
+      <input type="email" id="login-email" placeholder="seu@email.com">
+    </div>
+    <div class="form-group">
+      <label>Senha</label>
+      <input type="password" id="login-senha" placeholder="********">
+    </div>
+    <button class="btn btn-primary" id="btn-login" onclick="fazerLogin()">Entrar</button>
+    <div class="erro" id="erro-login"></div>
+  </div>
+  <div class="form" id="form-cadastro">
+    <div class="form-group">
+      <label>Nome completo</label>
+      <input type="text" id="cad-nome" placeholder="Seu nome">
+    </div>
+    <div class="form-group">
+      <label>E-mail</label>
+      <input type="email" id="cad-email" placeholder="seu@email.com">
+    </div>
+    <div class="form-group">
+      <label>Senha</label>
+      <input type="password" id="cad-senha" placeholder="Minimo 6 caracteres">
+    </div>
+    <button class="btn btn-primary" id="btn-cadastro" onclick="fazerCadastro()">Criar conta</button>
+    <div class="erro" id="erro-cadastro"></div>
+  </div>
+  <div class="voltar"><a href="/loja/index.html">Voltar para a loja</a></div>
+</div>
+<script type="module">
+  import { login, cadastrarUsuario, verificarAdmin } from "./auth.js";
+
+  window.trocarAba = function(aba, el) {
+    document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+    document.querySelectorAll('.form').forEach(function(f) { f.classList.remove('active'); });
+    document.getElementById('form-' + aba).classList.add('active');
+    el.classList.add('active');
+  };
+
+  window.fazerLogin = async function() {
+    var email = document.getElementById('login-email').value.trim();
+    var senha = document.getElementById('login-senha').value;
+    var erro = document.getElementById('erro-login');
+    var btn = document.getElementById('btn-login');
+    if (!email || !senha) {
+      erro.textContent = 'Preencha e-mail e senha.';
+      erro.classList.add('show');
+      return;
+    }
+    btn.disabled = true;
+    btn.textContent = 'Entrando...';
+    erro.classList.remove('show');
+    try {
+      var usuario = await login(email, senha);
+      var ehAdmin = await verificarAdmin(usuario.uid);
+      window.location.href = ehAdmin ? '/loja/admin.html' : '/loja/index.html';
+    } catch(err) {
+      erro.textContent = err.message;
+      erro.classList.add('show');
+      btn.disabled = false;
+      btn.textContent = 'Entrar';
+    }
+  };
+
+  window.fazerCadastro = async function() {
+    var nome = document.getElementById('cad-nome').value.trim();
+    var email = document.getElementById('cad-email').value.trim();
+    var senha = document.getElementById('cad-senha').value;
+    var erro = document.getElementById('erro-cadastro');
+    var btn = document.getElementById('btn-cadastro');
+    if (!nome || !email || !senha) {
+      erro.textContent = 'Preencha todos os campos.';
+      erro.classList.add('show');
+      return;
+    }
+    btn.disabled = true;
+    btn.textContent = 'Criando conta...';
+    erro.classList.remove('show');
+    try {
+      await cadastrarUsuario(nome, email, senha);
+      window.location.href = '/loja/index.html';
+    } catch(err) {
+      erro.textContent = err.message;
+      erro.classList.add('show');
+      btn.disabled = false;
+      btn.textContent = 'Criar conta';
+    }
+  };
+
+  // Restore toggle icon correctly
+  document.addEventListener('DOMContentLoaded', () => {
+    const saved = localStorage.getItem('theme') || 'light';
+    const btn = document.querySelector('.theme-toggle');
+    if(btn) btn.textContent = saved === 'dark' ? '☀️' : '🌙';
+  });
+
+  window.toggleTheme = function() {
+    const html = document.documentElement;
+    const current = html.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    document.querySelector('.theme-toggle').textContent = next === 'dark' ? '☀️' : '🌙';
+    localStorage.setItem('theme', next);
+  };
+</script>
+</body>
 </html>
