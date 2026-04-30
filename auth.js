@@ -1,19 +1,6 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyA-SNfY_hU9uRzApJTjI3RzNnr_ZDLoBfM",
-  authDomain: "beyou-loja.firebaseapp.com",
-  projectId: "beyou-loja",
-  storageBucket: "beyou-loja.firebasestorage.app",
-  messagingSenderId: "597162179913",
-  appId: "1:597162179913:web:33e52f9271b49bdd1eee98"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
+import { db, auth } from "./firebase-config.js";
+import { doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
 
 export async function cadastrarUsuario(nome, email, senha) {
   const credencial = await createUserWithEmailAndPassword(auth, email, senha);
@@ -31,7 +18,7 @@ export async function login(email, senha) {
 
 export async function logout() {
   await signOut(auth);
-  window.location.href = '/loja/login.html';
+  window.location.href = '/login.html';
 }
 
 export async function verificarAdmin(uid) {
@@ -54,13 +41,13 @@ export function observarLogin(callback) {
 export function protegerPaginaAdmin() {
   onAuthStateChanged(auth, async (usuario) => {
     if (!usuario) {
-      window.location.href = '/loja/login.html';
+      window.location.href = '/login.html';
       return;
     }
     const ehAdmin = await verificarAdmin(usuario.uid);
     if (!ehAdmin) {
       alert("Acesso negado.");
-      window.location.href = '/loja/index.html';
+      window.location.href = '/index.html';
     }
   });
 }
