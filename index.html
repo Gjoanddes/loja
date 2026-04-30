@@ -899,7 +899,8 @@
         <button class="nav-icon" title="Minha conta" onclick="toggleAccountMenu()">👤</button>
         <div class="account-menu" id="accountMenu">
           <div class="account-menu-header">Minha Conta</div>
-          <a href="/login.html" class="account-menu-item">Fazer Login / Cadastro</a>
+          <a href="/login.html" class="account-menu-item" id="menu-login-item">Fazer Login / Cadastro</a>
+          <a href="#" class="account-menu-item" id="menu-logout-item" style="display:none">Sair da Conta</a>
           <a href="#" class="account-menu-item">Meus Pedidos</a>
           <a href="#" class="account-menu-item">Lista de Desejos</a>
           <a href="#" class="account-menu-item">Configurações de Conta</a>
@@ -920,7 +921,8 @@
     <a href="#" onclick="toggleMenu()">Acessorios</a>
     <a href="#" onclick="toggleMenu()">Novidades</a>
     <a href="#" onclick="toggleMenu()" style="color:var(--accent)">Ofertas</a>
-    <a href="/login.html" onclick="toggleMenu()">Minha Conta</a>
+    <a href="/login.html" onclick="toggleMenu()" id="mobile-login-item">Minha Conta</a>
+    <a href="#" onclick="fazerLogout()" id="mobile-logout-item" style="display:none">Sair da Conta</a>
   </div>
 
   <!-- HERO -->
@@ -1052,6 +1054,34 @@
 
   <script type="module">
     import { getProdutosDestaque } from "./db-structure.js";
+    import { observarLogin, logout } from "./auth.js";
+
+    window.fazerLogout = logout;
+
+    // Atualiza menu conforme estado de login
+    observarLogin((usuario) => {
+      const loginItem   = document.getElementById('menu-login-item');
+      const logoutItem  = document.getElementById('menu-logout-item');
+      const mobileLogin = document.getElementById('mobile-login-item');
+      const mobileLogout= document.getElementById('mobile-logout-item');
+      if (usuario) {
+        loginItem.style.display   = 'none';
+        logoutItem.style.display  = '';
+        mobileLogin.style.display = 'none';
+        mobileLogout.style.display= '';
+      } else {
+        loginItem.style.display   = '';
+        logoutItem.style.display  = 'none';
+        mobileLogin.style.display = '';
+        mobileLogout.style.display= 'none';
+      }
+    });
+
+    // Botão de logout no menu desktop
+    document.getElementById('menu-logout-item').addEventListener('click', (e) => {
+      e.preventDefault();
+      logout();
+    });
 
     async function carregarProdutos() {
       const container = document.getElementById('products-container');
