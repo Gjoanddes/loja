@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<script>
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+</script>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - BeYou</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root[data-theme="light"] {
+      --bg: #fdfbf7;
+      --surface: #ffffff;
+      --border: #e0d8c8;
+      --accent: #8b5a2b;
+      --accent2: #a0522d;
+      --text: #332b22;
+      --muted: #8a7b66;
+    }
+    :root[data-theme="dark"] {
+      --bg: #121212;
+      --surface: #1e1e1e;
+      --border: #4b4a4a;
+      --accent: #8b5a2b;
+      --accent2: #a0522d;
+      --text: #f5f5f5;
+      --muted: #aaaaaa;
+    }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .bg-blob {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.15;
+      animation: float 8s ease-in-out infinite;
+      pointer-events: none;
+    }
+    .blob1 { width: 400px; height: 400px; background: var(--accent); top: -100px; right: -100px; }
+    .blob2 { width: 300px; height: 300px; background: var(--accent2); bottom: -80px; left: -80px; animation-delay: 3s; }
+    @keyframes float {
+      0%, 100% { transform: translate(0,0) scale(1); }
+      50% { transform: translate(20px,-20px) scale(1.05); }
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 48px 40px;
+      width: 100%;
+      max-width: 420px;
+      position: relative;
+      z-index: 1;
+    }
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 8px;
+    }
+    .logo span { color: var(--accent); }
+    .subtitle { font-size: 14px; color: var(--muted); margin-bottom: 36px; }
+    .tabs {
+      display: flex;
+      background: var(--bg);
+      border-radius: 10px;
+      padding: 4px;
+      margin-bottom: 28px;
+    }
+    .tab {
+      flex: 1;
+      padding: 10px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 500;
+      border-radius: 7px;
+      cursor: pointer;
+      color: var(--muted);
+      transition: all 0.2s;
+      border: none;
+      background: transparent;
+    }
+    .tab.active {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .form { display: none; }
+    .form.active { display: block; }
+    .form-group { margin-bottom: 16px; }
+    label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    input {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 13px 16px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input:focus { border-color: var(--accent); }
+    input::placeholder { color: var(--muted); }
+    .btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: 10px;
+      border: none;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: 'Syne', sans-serif;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: all 0.2s;
+    }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-primary:hover { opacity: 0.88; }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .erro {
+      background: rgba(255,60,95,0.1);
+      border: 1px solid rgba(255,60,95,0.3);
+      color: #ff3c5f;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      margin-top: 12px;
+      display: none;
+    }
+    .erro.show { display: block; }
+    .voltar { text-align: center; margin-top: 20px; font-size: 13px; color: var(--muted); }
+    .voltar a { color: var(--accent); text-decoration: none; font-weight: 500; }
+    .theme-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      cursor: pointer;
+      color: var(--text);
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      z-index: 10;
+    }
+    .theme-toggle:hover {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()" title="Alternar tema">🌙</button>
+<div class="bg-blob blob1"></div>
+<div class="bg-blob blob2"></div>
+<div class="card">
+  <div class="logo">Be<span>You</span></div>
+  <div class="subtitle">Bem-vindo de volta!</div>
+  <div class="tabs">
+    <button class="tab active" id="tab-entrar" onclick="trocarAba('login', this)">Entrar</button>
+    <button class="tab" id="tab-cadastro" onclick="trocarAba('cadastro', this)">Cadastrar</button>
+  </div>
+  <div class="form active" id="form-login">
+    <div class="form-group">
+      <label>E-mail</label>
+      <input type="email" id="login-email" placeholder="seu@email.com">
+    </div>
+    <div class="form-group">
+      <label>Senha</label>
+      <input type="password" id="login-senha" placeholder="********">
+    </div>
+    <button class="btn btn-primary" id="btn-login" onclick="fazerLogin()">Entrar</button>
+    <div class="erro" id="erro-login"></div>
+  </div>
+  <div class="form" id="form-cadastro">
+    <div class="form-group">
+      <label>Nome completo</label>
+      <input type="text" id="cad-nome" placeholder="Seu nome">
+    </div>
+    <div class="form-group">
+      <label>E-mail</label>
+      <input type="email" id="cad-email" placeholder="seu@email.com">
+    </div>
+    <div class="form-group">
+      <label>Senha</label>
+      <input type="password" id="cad-senha" placeholder="Minimo 6 caracteres">
+    </div>
+    <button class="btn btn-primary" id="btn-cadastro" onclick="fazerCadastro()">Criar conta</button>
+    <div class="erro" id="erro-cadastro"></div>
+  </div>
+  <div class="voltar"><a href="/loja/index.html">Voltar para a loja</a></div>
+</div>
+<script type="module">
+  import { login, cadastrarUsuario, verificarAdmin } from "./auth.js";
+
+  window.trocarAba = function(aba, el) {
+    document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+    document.querySelectorAll('.form').forEach(function(f) { f.classList.remove('active'); });
+    document.getElementById('form-' + aba).classList.add('active');
+    el.classList.add('active');
+  };
+
+  window.fazerLogin = async function() {
+    var email = document.getElementById('login-email').value.trim();
+    var senha = document.getElementById('login-senha').value;
+    var erro = document.getElementById('erro-login');
+    var btn = document.getElementById('btn-login');
+    if (!email || !senha) {
+      erro.textContent = 'Preencha e-mail e senha.';
+      erro.classList.add('show');
+      return;
+    }
+    btn.disabled = true;
+    btn.textContent = 'Entrando...';
+    erro.classList.remove('show');
+    try {
+      var usuario = await login(email, senha);
+      var ehAdmin = await verificarAdmin(usuario.uid);
+      window.location.href = ehAdmin ? '/loja/admin.html' : '/loja/index.html';
+    } catch(err) {
+      erro.textContent = err.message;
+      erro.classList.add('show');
+      btn.disabled = false;
+      btn.textContent = 'Entrar';
+    }
+  };
+
+  window.fazerCadastro = async function() {
+    var nome = document.getElementById('cad-nome').value.trim();
+    var email = document.getElementById('cad-email').value.trim();
+    var senha = document.getElementById('cad-senha').value;
+    var erro = document.getElementById('erro-cadastro');
+    var btn = document.getElementById('btn-cadastro');
+    if (!nome || !email || !senha) {
+      erro.textContent = 'Preencha todos os campos.';
+      erro.classList.add('show');
+      return;
+    }
+    btn.disabled = true;
+    btn.textContent = 'Criando conta...';
+    erro.classList.remove('show');
+    try {
+      await cadastrarUsuario(nome, email, senha);
+      window.location.href = '/loja/index.html';
+    } catch(err) {
+      erro.textContent = err.message;
+      erro.classList.add('show');
+      btn.disabled = false;
+      btn.textContent = 'Criar conta';
+    }
+  };
+
+  // Restore toggle icon correctly
+  document.addEventListener('DOMContentLoaded', () => {
+    const saved = localStorage.getItem('theme') || 'light';
+    const btn = document.querySelector('.theme-toggle');
+    if(btn) btn.textContent = saved === 'dark' ? '☀️' : '🌙';
+  });
+
+  window.toggleTheme = function() {
+    const html = document.documentElement;
+    const current = html.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    document.querySelector('.theme-toggle').textContent = next === 'dark' ? '☀️' : '🌙';
+    localStorage.setItem('theme', next);
+  };
+</script>
+</body>
+</html>
