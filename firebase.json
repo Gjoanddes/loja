@@ -1,16 +1,13 @@
 {
   "hosting": {
-    "public": "y",
+    "public": ".",
     "ignore": [
       "firebase.json",
       "**/.*",
-      "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
+      "**/node_modules/**",
+      "SETUP.md",
+      "skills-lock.json",
+      "y/**"
     ]
   }
 }
