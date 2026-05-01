@@ -1085,7 +1085,7 @@
           <div class="account-menu-header">Minha Conta</div>
           <a href="/login.html" class="account-menu-item" id="menu-login-item">Fazer Login / Cadastro</a>
           <a href="#" class="account-menu-item" id="menu-logout-item" style="display:none">Sair da Conta</a>
-          <a href="#" class="account-menu-item" id="menu-pedidos-item">Meus Pedidos</a>
+          <a href="#" class="account-menu-item" id="menu-pedidos-item" style="display:none">Meus Pedidos</a>
           <a href="#" class="account-menu-item">Lista de Desejos</a>
           <a href="#" class="account-menu-item">Configurações de Conta</a>
         </div>
@@ -1247,16 +1247,19 @@
       window._currentUser = usuario;
       const loginItem   = document.getElementById('menu-login-item');
       const logoutItem  = document.getElementById('menu-logout-item');
+      const pedidosItem = document.getElementById('menu-pedidos-item');
       const mobileLogin = document.getElementById('mobile-login-item');
       const mobileLogout= document.getElementById('mobile-logout-item');
       if (usuario) {
         loginItem.style.display   = 'none';
         logoutItem.style.display  = '';
+        pedidosItem.style.display = '';
         mobileLogin.style.display = 'none';
         mobileLogout.style.display= '';
       } else {
         loginItem.style.display   = '';
         logoutItem.style.display  = 'none';
+        pedidosItem.style.display = 'none';
         mobileLogin.style.display = '';
         mobileLogout.style.display= 'none';
       }
@@ -1478,6 +1481,9 @@
       }
     });
   </script>
+
+  <script>
+    var carrinho = JSON.parse(localStorage.getItem('beyou-cart') || '[]');
 
     function toggleCart() {
       document.getElementById('cartSidebar').classList.toggle('open');
