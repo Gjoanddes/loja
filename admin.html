@@ -383,6 +383,41 @@
       font-size: 14px;
     }
 
+
+    /* TABS */
+    .tabs-nav {
+      display: flex; gap: 4px; margin-bottom: 28px;
+      border-bottom: 1px solid var(--border); padding-bottom: 0;
+    }
+    .tab-btn {
+      padding: 10px 20px; background: none; border: none;
+      color: var(--muted); font-size: 14px; font-weight: 500;
+      cursor: pointer; border-bottom: 2px solid transparent;
+      margin-bottom: -1px; transition: all 0.2s;
+    }
+    .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* PEDIDOS */
+    .pedido-admin-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 20px; margin-bottom: 12px;
+    }
+    .pedido-admin-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 12px; flex-wrap: wrap; gap: 8px;
+    }
+    .pedido-admin-id { font-size: 13px; font-weight: 600; }
+    .pedido-admin-data { font-size: 12px; color: var(--muted); }
+    .pedido-admin-email { font-size: 12px; color: var(--muted); }
+    .pedido-status-select {
+      background: var(--surface2); border: 1px solid var(--border);
+      color: var(--text); padding: 6px 12px; border-radius: 8px;
+      font-size: 12px; font-weight: 600; cursor: pointer;
+    }
+    .pedido-itens-list { margin: 12px 0; font-size: 13px; color: var(--muted); }
+    .pedido-total-admin { font-size: 16px; font-weight: 700; color: var(--accent); }
     @media (max-width: 600px) {
       .form-grid {
         grid-template-columns: 1fr;
@@ -410,6 +445,15 @@
   </header>
 
   <div class="container">
+
+    <!-- TABS NAV -->
+    <div class="tabs-nav">
+      <button class="tab-btn active" onclick="trocarTab('produtos')">Produtos</button>
+      <button class="tab-btn" onclick="trocarTab('pedidos')">Pedidos <span id="badge-pedidos" style="background:var(--accent);color:white;font-size:10px;padding:2px 6px;border-radius:10px;margin-left:4px;"></span></button>
+    </div>
+
+    <!-- TAB PRODUTOS -->
+    <div class="tab-content active" id="tab-produtos">
 
     <!-- Stats -->
     <div class="stats">
@@ -511,6 +555,20 @@
     </div>
 
   </div>
+
+    </div><!-- /tab-produtos -->
+
+    <!-- TAB PEDIDOS -->
+    <div class="tab-content" id="tab-pedidos">
+      <div class="section-header">
+        <div class="section-title">Todos os Pedidos</div>
+      </div>
+      <div id="lista-pedidos">
+        <div class="vazio">Carregando pedidos...</div>
+      </div>
+    </div><!-- /tab-pedidos -->
+
+  </div><!-- /container -->
 
   <!-- Toast de feedback -->
   <div class="toast" id="toast"></div>
@@ -639,8 +697,7 @@
     };
 
     window.editarProduto = (id) => {
-      // Abre o formulário de edição (pode ser expandido depois)
-      mostrarToast("Edição em breve! Por enquanto remova e recadastre.");
+      mostrarToast("Edicao em breve! Por enquanto remova e recadastre.");
     };
 
     function mostrarToast(msg, erro = false) {
@@ -649,6 +706,67 @@
       t.className = "toast show" + (erro ? " erro" : "");
       setTimeout(() => t.className = "toast", 3000);
     }
+
+    // ===== PEDIDOS =====
+    import { getPedidos, atualizarPedido } from "./db-structure.js";
+
+    async function carregarPedidos() {
+      const lista = document.getElementById('lista-pedidos');
+      const badge = document.getElementById('badge-pedidos');
+      try {
+        const pedidos = await getPedidos();
+        if (badge) badge.textContent = pedidos.length;
+        if (!pedidos || pedidos.length === 0) {
+          lista.innerHTML = '<div class="vazio">Nenhum pedido ainda.</div>';
+          return;
+        }
+        const statusLabels = { pendente:'Pendente', pago:'Pago', enviado:'Enviado', entregue:'Entregue', cancelado:'Cancelado' };
+        lista.innerHTML = pedidos.map(p => {
+          const data = p.criadoEm?.toDate ? p.criadoEm.toDate().toLocaleDateString('pt-BR') : '';
+          return `<div class="pedido-admin-card">
+            <div class="pedido-admin-header">
+              <div>
+                <div class="pedido-admin-id">Pedido #${p.id.slice(-8).toUpperCase()}</div>
+                <div class="pedido-admin-data">${data}</div>
+                <div class="pedido-admin-email">${p.usuarioId || ''}</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px;">
+                <span class="pedido-total-admin">R$ ${Number(p.total||0).toFixed(2).replace('.',',')}</span>
+                <select class="pedido-status-select" onchange="atualizarStatusPedido('${p.id}', this.value)">
+                  ${['pendente','pago','enviado','entregue','cancelado'].map(s =>
+                    `<option value="${s}" ${p.status===s?'selected':''}>${statusLabels[s]}</option>`
+                  ).join('')}
+                </select>
+              </div>
+            </div>
+            <div class="pedido-itens-list">
+              ${(p.itens||[]).map(i => `${i.quantidade}x ${i.nome} — R$ ${Number(i.preco*i.quantidade).toFixed(2).replace('.',',')}`).join(' &nbsp;|&nbsp; ')}
+            </div>
+          </div>`;
+        }).join('');
+      } catch(e) {
+        lista.innerHTML = '<div class="vazio">Erro ao carregar pedidos.</div>';
+        console.error(e);
+      }
+    }
+
+    window.atualizarStatusPedido = async (id, status) => {
+      try {
+        await atualizarPedido(id, { status });
+        mostrarToast('Status atualizado!');
+      } catch(e) {
+        mostrarToast('Erro ao atualizar.', true);
+      }
+    };
+
+    window.trocarTab = (tab) => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.getElementById('tab-' + tab).classList.add('active');
+      event.target.classList.add('active');
+      if (tab === 'pedidos') carregarPedidos();
+    };
+
   </script>
 
 </body>

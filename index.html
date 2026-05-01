@@ -937,6 +937,112 @@
       font-weight: 500; cursor: pointer; margin-top: 10px; transition: all 0.2s;
     }
     .cart-continue:hover { border-color: var(--text); color: var(--text); }
+
+    /* MODAL MEUS PEDIDOS */
+    .pedidos-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 500;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; visibility: hidden;
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+    }
+    .pedidos-overlay.open { opacity: 1; visibility: visible; }
+    .pedidos-modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      width: min(560px, 94vw);
+      max-height: 82vh;
+      display: flex; flex-direction: column;
+      transform: translateY(20px) scale(0.97);
+      transition: transform 0.25s ease;
+      overflow: hidden;
+    }
+    .pedidos-overlay.open .pedidos-modal {
+      transform: translateY(0) scale(1);
+    }
+    .pedidos-modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 24px 16px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .pedidos-modal-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 18px; font-weight: 700;
+      color: var(--text);
+    }
+    .pedidos-modal-close {
+      background: none; border: none; cursor: pointer;
+      color: var(--muted); font-size: 22px;
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 8px; transition: background 0.2s, color 0.2s;
+    }
+    .pedidos-modal-close:hover { background: var(--border); color: var(--text); }
+    .pedidos-modal-body {
+      overflow-y: auto; padding: 16px 24px 24px; flex: 1;
+    }
+    .pedidos-loading {
+      text-align: center; padding: 48px 0;
+      color: var(--muted); font-size: 14px;
+    }
+    .pedido-card {
+      border: 1px solid var(--border);
+      border-radius: 14px; padding: 18px;
+      margin-bottom: 14px;
+      transition: border-color 0.2s;
+    }
+    .pedido-card:hover { border-color: var(--accent); }
+    .pedido-card:last-child { margin-bottom: 0; }
+    .pedido-card-top {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; margin-bottom: 14px; gap: 8px;
+    }
+    .pedido-num {
+      font-size: 13px; font-weight: 700;
+      color: var(--text); text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .pedido-data { font-size: 12px; color: var(--muted); margin-top: 3px; }
+    .pedido-status-badge {
+      font-size: 11px; font-weight: 700;
+      padding: 4px 12px; border-radius: 20px;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .badge-pendente   { background: #fef3c7; color: #92400e; }
+    .badge-pago       { background: #d1fae5; color: #065f46; }
+    .badge-enviado    { background: #dbeafe; color: #1e40af; }
+    .badge-entregue   { background: #d1fae5; color: #065f46; }
+    .badge-cancelado  { background: #fee2e2; color: #991b1b; }
+    .pedido-itens-list { border-top: 1px solid var(--border); padding-top: 12px; }
+    .pedido-item-row {
+      display: flex; align-items: center;
+      font-size: 13px; color: var(--muted);
+      padding: 4px 0; gap: 8px;
+    }
+    .pedido-item-row .item-img {
+      width: 36px; height: 44px; border-radius: 6px;
+      background: var(--bg2); overflow: hidden; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-size: 16px;
+    }
+    .pedido-item-row .item-img img { width: 100%; height: 100%; object-fit: cover; }
+    .pedido-item-row .item-nome { flex: 1; color: var(--text); font-weight: 500; }
+    .pedido-item-row .item-preco { font-weight: 700; color: var(--accent); }
+    .pedido-total-row {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 12px; padding-top: 12px;
+      border-top: 1px solid var(--border);
+      font-size: 14px; font-weight: 700; color: var(--text);
+    }
+    .pedido-total-row span:last-child { color: var(--accent); font-size: 16px; }
+    .pedidos-empty {
+      text-align: center; padding: 56px 20px; color: var(--muted);
+    }
+    .pedidos-empty-icon { font-size: 48px; margin-bottom: 12px; }
+    .pedidos-empty h3 { font-size: 16px; color: var(--text); margin-bottom: 6px; }
+    .pedidos-empty p { font-size: 13px; }
   </style>
 </head>
 
@@ -979,7 +1085,7 @@
           <div class="account-menu-header">Minha Conta</div>
           <a href="/login.html" class="account-menu-item" id="menu-login-item">Fazer Login / Cadastro</a>
           <a href="#" class="account-menu-item" id="menu-logout-item" style="display:none">Sair da Conta</a>
-          <a href="#" class="account-menu-item">Meus Pedidos</a>
+          <a href="#" class="account-menu-item" id="menu-pedidos-item">Meus Pedidos</a>
           <a href="#" class="account-menu-item">Lista de Desejos</a>
           <a href="#" class="account-menu-item">Configurações de Conta</a>
         </div>
@@ -1138,6 +1244,7 @@
 
     // Atualiza menu conforme estado de login
     observarLogin((usuario) => {
+      window._currentUser = usuario;
       const loginItem   = document.getElementById('menu-login-item');
       const logoutItem  = document.getElementById('menu-logout-item');
       const mobileLogin = document.getElementById('mobile-login-item');
@@ -1239,13 +1346,138 @@
         <span class="cart-subtotal-label">Subtotal</span>
         <span class="cart-subtotal-value" id="cartTotal">R$ 0,00</span>
       </div>
-      <button class="cart-checkout-btn">Finalizar Compra</button>
+      <button class="cart-checkout-btn" onclick="finalizarCompra()">Finalizar Compra</button>
       <button class="cart-continue" onclick="toggleCart()">Continuar Comprando</button>
     </div>
   </div>
 
-  <script>
-    var carrinho = JSON.parse(localStorage.getItem('beyou-cart') || '[]');
+  <!-- MODAL MEUS PEDIDOS -->
+  <div class="pedidos-overlay" id="pedidosOverlay">
+    <div class="pedidos-modal" id="pedidosModal">
+      <div class="pedidos-modal-header">
+        <span class="pedidos-modal-title">Meus Pedidos</span>
+        <button class="pedidos-modal-close" onclick="fecharPedidosModal()" aria-label="Fechar">&#x2715;</button>
+      </div>
+      <div class="pedidos-modal-body" id="pedidosModalBody">
+        <div class="pedidos-loading">Carregando seus pedidos...</div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { getPedidosDoUsuario } from './db-structure.js';
+
+    const statusMap = {
+      pendente:  ['Pendente',  'badge-pendente'],
+      pago:      ['Pago',      'badge-pago'],
+      enviado:   ['Enviado',   'badge-enviado'],
+      entregue:  ['Entregue',  'badge-entregue'],
+      cancelado: ['Cancelado', 'badge-cancelado'],
+    };
+
+    function formatarData(ts) {
+      if (!ts) return '—';
+      const d = ts.toDate ? ts.toDate() : new Date(ts.seconds ? ts.seconds * 1000 : ts);
+      return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    }
+
+    function formatReal(val) {
+      return 'R$ ' + Number(val).toFixed(2).replace('.', ',');
+    }
+
+    function renderPedido(p) {
+      const [label, cls] = statusMap[p.status] ?? ['—', 'badge-pendente'];
+      const itens = (p.itens || []).map(item => `
+        <div class="pedido-item-row">
+          <div class="item-img">${item.imagem ? `<img src="${item.imagem}" alt="">` : '👕'}</div>
+          <span class="item-nome">${item.quantidade}× ${item.nome}</span>
+          <span class="item-preco">${formatReal(item.preco * item.quantidade)}</span>
+        </div>`).join('');
+
+      return `
+        <div class="pedido-card">
+          <div class="pedido-card-top">
+            <div>
+              <div class="pedido-num">Pedido #${p.id.slice(-8).toUpperCase()}</div>
+              <div class="pedido-data">${formatarData(p.criadoEm)}</div>
+            </div>
+            <span class="pedido-status-badge ${cls}">${label}</span>
+          </div>
+          <div class="pedido-itens-list">
+            ${itens}
+            <div class="pedido-total-row">
+              <span>Total do pedido</span>
+              <span>${formatReal(p.total || 0)}</span>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    async function carregarPedidos() {
+      const body = document.getElementById('pedidosModalBody');
+      const user = window._currentUser;
+
+      if (!user) {
+        body.innerHTML = `<div class="pedidos-empty">
+          <div class="pedidos-empty-icon">🔒</div>
+          <h3>Faça login primeiro</h3>
+          <p>Você precisa estar logado para ver seus pedidos.</p>
+        </div>`;
+        return;
+      }
+
+      body.innerHTML = '<div class="pedidos-loading">Carregando seus pedidos...</div>';
+
+      try {
+        const pedidos = await getPedidosDoUsuario(user.uid);
+        if (!pedidos || pedidos.length === 0) {
+          body.innerHTML = `<div class="pedidos-empty">
+            <div class="pedidos-empty-icon">📦</div>
+            <h3>Nenhum pedido ainda</h3>
+            <p>Que tal dar uma olhada na nossa coleção?</p>
+          </div>`;
+          return;
+        }
+        body.innerHTML = pedidos.map(renderPedido).join('');
+      } catch (err) {
+        console.error('Erro ao carregar pedidos:', err);
+        body.innerHTML = '<div class="pedidos-loading">Erro ao carregar pedidos. Tente novamente.</div>';
+      }
+    }
+
+    window.abrirPedidosModal = function () {
+      document.getElementById('pedidosOverlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+      carregarPedidos();
+    };
+
+    window.fecharPedidosModal = function () {
+      document.getElementById('pedidosOverlay').classList.remove('open');
+      document.body.style.overflow = '';
+    };
+
+    // Fechar clicando no overlay
+    document.getElementById('pedidosOverlay').addEventListener('click', function (e) {
+      if (e.target === this) window.fecharPedidosModal();
+    });
+
+    // Fechar com ESC
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') window.fecharPedidosModal();
+    });
+
+    // Conectar botão do dropdown
+    document.addEventListener('DOMContentLoaded', function () {
+      const btn = document.getElementById('menu-pedidos-item');
+      if (btn) {
+        btn.addEventListener('click', function (e) {
+          e.preventDefault();
+          document.getElementById('accountMenu').classList.remove('show');
+          window.abrirPedidosModal();
+        });
+      }
+    });
+  </script>
 
     function toggleCart() {
       document.getElementById('cartSidebar').classList.toggle('open');
@@ -1322,6 +1554,40 @@
 
     atualizarBadge();
     renderCarrinho();
+
+    async function finalizarCompra() {
+      if (carrinho.length === 0) return;
+      var user = window._currentUser;
+      if (!user) {
+        alert('Faca login para finalizar a compra!');
+        window.location.href = '/login.html';
+        return;
+      }
+      var btn = document.querySelector('.cart-checkout-btn');
+      btn.textContent = 'Processando...';
+      btn.disabled = true;
+      try {
+        var { criarPedido } = await import('./db-structure.js');
+        var itens = carrinho.map(function(i) {
+          return { produtoId: i.id, nome: i.nome, quantidade: i.quantidade, preco: i.preco };
+        });
+        await criarPedido(user.uid, itens, {});
+        carrinho = [];
+        localStorage.setItem('beyou-cart', '[]');
+        atualizarBadge();
+        renderCarrinho();
+        toggleCart();
+        alert('Pedido realizado com sucesso!');
+        if (typeof window.abrirPedidosModal === 'function') {
+          window.abrirPedidosModal();
+        }
+      } catch(e) {
+        alert('Erro ao criar pedido. Tente novamente.');
+        btn.textContent = 'Finalizar Compra';
+        btn.disabled = false;
+      }
+    }
+    window.finalizarCompra = finalizarCompra;
   </script>
 
 </body>

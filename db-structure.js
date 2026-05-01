@@ -33,11 +33,8 @@ export async function getProdutoPorId(id) {
 export async function adicionarProduto(produto, arquivosImagem) {
   try {
     const docRef = await addDoc(collection(db, "produtos"), {
-      ...produto,
-      imagens: [],
-      ativo: true,
-      criadoEm: new Date(),
-      atualizadoEm: new Date()
+      ...produto, imagens: [], ativo: true,
+      criadoEm: new Date(), atualizadoEm: new Date()
     });
     return docRef.id;
   } catch (e) { console.error(e); throw e; }
@@ -57,9 +54,10 @@ export async function removerProduto(id) {
 
 export async function criarPedido(usuarioId, itens, enderecoEntrega) {
   try {
-    const total = itens.reduce((acc, item) => acc + (item.preco * item.quantidade), 0);
+    const total = itens.reduce((a, i) => a + (i.preco * i.quantidade), 0);
     const docRef = await addDoc(collection(db, "pedidos"), {
-      usuarioId, itens, total, endereco: enderecoEntrega, status: "pendente", criadoEm: new Date()
+      usuarioId, itens, total, endereco: enderecoEntrega,
+      status: "pendente", criadoEm: new Date()
     });
     return docRef.id;
   } catch (e) { console.error(e); throw e; }
@@ -71,4 +69,18 @@ export async function getPedidosDoUsuario(usuarioId) {
     const snapshot = await getDocs(q);
     return snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
   } catch (e) { console.error(e); return []; }
+}
+
+export async function getPedidos() {
+  try {
+    const q = query(collection(db, "pedidos"), orderBy("criadoEm", "desc"));
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+  } catch (e) { console.error(e); return []; }
+}
+
+export async function atualizarPedido(id, dados) {
+  try {
+    await updateDoc(doc(db, "pedidos", id), dados);
+  } catch (e) { console.error(e); throw e; }
 }
