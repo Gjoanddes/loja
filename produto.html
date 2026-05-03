@@ -535,7 +535,7 @@
         <a href="#" class="account-menu-item" id="menu-logout-item" style="display:none">Sair da Conta</a>
         <a href="#" class="account-menu-item" id="menu-pedidos-item" style="display:none">Meus Pedidos</a>
         <a href="#" class="account-menu-item">Lista de Desejos</a>
-        <a href="#" class="account-menu-item">Configurações de Conta</a>
+        <a href="/conta.html" class="account-menu-item">Configurações de Conta</a>
       </div>
     </div>
     <button class="nav-icon cart-badge" id="cartBtn" title="Carrinho" onclick="toggleCart()">🛒</button>
@@ -793,8 +793,8 @@
 
 <!-- Firebase / auth / produto loader -->
 <script type="module">
-  import { getProdutoPorId, getProdutos } from './db-structure.js';
-  import { observarLogin, logout } from './auth.js';
+  import { getProdutoPorId, getProdutos } from './app.js';
+  import { observarLogin, logout } from './app.js';
 
   window.fazerLogout = logout;
 
@@ -1078,7 +1078,7 @@
     var btn = document.querySelector('.cart-checkout-btn');
     btn.textContent = 'Processando...'; btn.disabled = true;
     try {
-      var { criarPedido } = await import('./db-structure.js');
+      var { criarPedido } = await import('./app.js');
       var itens = carrinho.map(function(i) { return { produtoId: i.id, nome: i.nome, quantidade: i.quantidade, preco: i.preco }; });
       await criarPedido(user.uid, itens, {});
       carrinho = []; localStorage.setItem('beyou-cart', '[]');
@@ -1204,7 +1204,7 @@
 
 <!-- Pedidos modal — carregador completo (mesmo padrão do index) -->
 <script type="module">
-  import { getPedidosDoUsuario } from './db-structure.js';
+  import { getPedidosDoUsuario } from './app.js';
 
   const statusMap = {
     pendente:  ['Pendente',  'badge-pendente'],

@@ -574,10 +574,10 @@
   <div class="toast" id="toast"></div>
 
   <script type="module">
-    import { protegerPaginaAdmin, logout } from "./auth.js";
+    import { protegerPaginaAdmin, logout } from './app.js';
     import {
       getProdutos, adicionarProduto, removerProduto
-    } from "./db-structure.js";
+    } from './app.js';
 
     // Protege a página: só admin entra
     protegerPaginaAdmin();
@@ -708,7 +708,7 @@
     }
 
     // ===== PEDIDOS =====
-    import { getPedidos, atualizarPedido } from "./db-structure.js";
+    import { getPedidos, atualizarPedido } from './app.js';
 
     async function carregarPedidos() {
       const lista = document.getElementById('lista-pedidos');
