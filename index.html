@@ -1273,21 +1273,25 @@
 
       container.innerHTML = produtos.map(p => `
       <div class="product-card">
-        <div class="product-img">
-          ${p.imagens && p.imagens[0]
-          ? `<img src="${p.imagens[0]}" alt="${p.nome}">`
-          : 'Sem imagem'}
-          ${p.precoPromocional ? `<span class="product-badge">SALE</span>` : ''}
-        </div>
-        <div class="product-info">
-          <div class="product-name">${p.nome}</div>
-          <div>
-            ${p.precoPromocional
-          ? `<span class="product-price-old">R$ ${Number(p.preco).toFixed(2).replace('.', ',')}</span>`
-          : ''}
-            <span class="product-price">R$ ${Number(p.precoPromocional || p.preco).toFixed(2).replace('.', ',')}</span>
+        <a href="/produto.html?id=${p.id}" style="display:block;text-decoration:none;color:inherit">
+          <div class="product-img">
+            ${p.imagens && p.imagens[0]
+            ? `<img src="${p.imagens[0]}" alt="${p.nome}">`
+            : 'Sem imagem'}
+            ${p.precoPromocional ? `<span class="product-badge">SALE</span>` : ''}
           </div>
-          <div class="product-parcel">6x de R$ ${(Number(p.precoPromocional || p.preco) / 6).toFixed(2).replace('.', ',')} sem juros</div>
+          <div class="product-info">
+            <div class="product-name">${p.nome}</div>
+            <div>
+              ${p.precoPromocional
+              ? `<span class="product-price-old">R$ ${Number(p.preco).toFixed(2).replace('.', ',')}</span>`
+              : ''}
+              <span class="product-price">R$ ${Number(p.precoPromocional || p.preco).toFixed(2).replace('.', ',')}</span>
+            </div>
+            <div class="product-parcel">6x de R$ ${(Number(p.precoPromocional || p.preco) / 6).toFixed(2).replace('.', ',')} sem juros</div>
+          </div>
+        </a>
+        <div style="padding: 0 14px 14px">
           <button class="product-btn" onclick="adicionarAoCarrinho({id:'${p.id}',nome:'${p.nome}',preco:${p.precoPromocional||p.preco},imagem:${p.imagens&&p.imagens[0]?JSON.stringify(p.imagens[0]):'null'}})">Adicionar ao Carrinho</button>
         </div>
       </div>
