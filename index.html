@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BeYou — Streetwear</title>
+  <title>MTN Co. — Streetwear</title>
   <link
     href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Syne:wght@700;800&display=swap"
     rel="stylesheet">
@@ -18,28 +18,28 @@
     }
 
     :root[data-theme="light"] {
-      --bg: #fdfbf7;
-      --bg2: #f5f0e8;
-      --surface: #ffffff;
-      --border: #e0d8c8;
-      --text: #000000;
+      --bg: #f2ede8;
+      --bg2: #e8e2da;
+      --surface: #faf8f5;
+      --border: #ccc5bb;
+      --text: #1a1917;
       --muted: #000000;
-      --accent: #8b5a2b;
-      --accent2: #a0522d;
-      --card-bg: #ffffff;
+      --accent: #9c7248;
+      --accent2: #8c6238;
+      --card-bg: #faf8f5;
       --hover-border: 4px;
     }
 
     :root[data-theme="dark"] {
-      --bg: #121212;
-      --bg2: #1e1e1e;
-      --surface: #1e1e1e;
-      --border: #4b4a4a;
-      --text: #f5f5f5;
-      --muted: #aaaaaa;
-      --accent: #8b5a2b;
-      --accent2: #a0522d;
-      --card-bg: #1e1e1e;
+      --bg: #141210;
+      --bg2: #1e1c19;
+      --surface: #242220;
+      --border: #3a3733;
+      --text: #f0ece6;
+      --muted: #9c9488;
+      --accent: #9c7248;
+      --accent2: #8c6238;
+      --card-bg: #1e1c19;
       --hover-border: 2px;
     }
 
@@ -56,7 +56,7 @@
 
     /* ANNOUNCEMENT BAR */
     .announcement {
-      background: #8b5a2b;
+      background: #9c7248;
       color: white;
       text-align: center;
       font-size: 12px;
@@ -251,7 +251,7 @@
       position: absolute;
       top: -4px;
       right: -4px;
-      background: #8b5a2b;
+      background: #9c7248;
       color: white;
       font-size: 9px;
       width: 16px;
@@ -327,61 +327,119 @@
 
     /* HERO */
     .hero {
-      height: 90vh;
-      min-height: 500px;
-      background: linear-gradient(135deg, #2c1810 0%, #4a2c1a 50%, #2c1810 100%);
+      height: 92vh;
+      min-height: 560px;
+      background:
+        linear-gradient(180deg, rgba(10,10,10,0) 0%, rgba(10,10,10,0.72) 60%, #0a0a0a 100%),
+        linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #111 100%);
       display: flex;
       align-items: flex-end;
-      padding: 60px 40px;
+      padding: 64px 48px;
       position: relative;
       overflow: hidden;
     }
 
+    /* Silhueta da montanha no fundo */
     .hero::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: radial-gradient(ellipse at 70% 50%, rgba(255, 60, 95, 0.15) 0%, transparent 60%);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 560' preserveAspectRatio='xMidYMid slice'%3E%3Cpolygon points='0,560 360,80 560,300 720,60 920,280 1080,100 1440,560' fill='%23ffffff' opacity='0.03'/%3E%3Cpolygon points='200,560 500,160 640,320 780,120 980,380 1200,180 1440,420 1440,560' fill='%23ffffff' opacity='0.025'/%3E%3C/svg%3E");
+      background-size: cover;
+      background-position: center bottom;
+    }
+
+    /* Linha de grade diagonal sutil */
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 60px,
+        rgba(255,255,255,0.012) 60px,
+        rgba(255,255,255,0.012) 61px
+      );
+      pointer-events: none;
     }
 
     .hero-content {
       position: relative;
       z-index: 1;
-      max-width: 700px;
+      max-width: 780px;
     }
 
     .hero-tag {
-      display: inline-block;
-      background: #8b5a2b;
-      color: white;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.75);
       font-size: 11px;
       font-weight: 700;
-      padding: 4px 12px;
-      border-radius: 20px;
-      letter-spacing: 0.1em;
+      padding: 5px 14px;
+      border-radius: 4px;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
-      margin-bottom: 20px;
+      margin-bottom: 28px;
+      backdrop-filter: blur(4px);
+    }
+    .hero-tag::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #9c7248;
+      flex-shrink: 0;
     }
 
     .hero h1 {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(64px, 12vw, 140px);
-      line-height: 0.9;
-      letter-spacing: 2px;
-      color: var(--text);
-      margin-bottom: 24px;
+      font-size: clamp(72px, 13vw, 160px);
+      line-height: 0.88;
+      letter-spacing: 3px;
+      color: #ffffff;
+      margin-bottom: 28px;
+      text-shadow: 0 2px 40px rgba(0,0,0,0.5);
     }
 
-    .hero h1 span {
-      color: var(--accent);
+    .hero h1 em {
+      font-style: normal;
+      color: #9c7248;
+      -webkit-text-stroke: 0px;
+    }
+
+    .hero h1 .outline {
+      -webkit-text-stroke: 2px rgba(255,255,255,0.25);
+      color: transparent;
+    }
+
+    .hero-sub {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .hero-sub-line {
+      width: 40px; height: 2px;
+      background: #9c7248;
+      flex-shrink: 0;
+    }
+    .hero-sub-text {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
     }
 
     .hero p {
-      font-size: 16px;
-      color: var(--muted);
-      margin-bottom: 32px;
-      max-width: 400px;
-      line-height: 1.6;
+      font-size: 15px;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 40px;
+      max-width: 420px;
+      line-height: 1.7;
     }
 
     .hero-btns {
@@ -391,35 +449,52 @@
     }
 
     .btn-hero {
-      padding: 14px 32px;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 600;
+      padding: 15px 36px;
+      border-radius: 4px;
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
       cursor: pointer;
       text-decoration: none;
-      transition: all 0.2s;
-      letter-spacing: 0.04em;
+      transition: all 0.25s;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
     .btn-hero-primary {
-      background: #8b5a2b;
+      background: #9c7248;
       color: white;
       border: none;
     }
 
     .btn-hero-primary:hover {
-      opacity: 0.85;
+      background: #8c6238;
       transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(139,90,43,0.4);
     }
 
     .btn-hero-secondary {
       background: transparent;
-      color: var(--text);
-      border: 1px solid var(--border);
+      color: rgba(255,255,255,0.75);
+      border: 1px solid rgba(255,255,255,0.2);
     }
 
     .btn-hero-secondary:hover {
-      border-color: var(--text);
+      border-color: rgba(255,255,255,0.6);
+      color: white;
+    }
+
+    /* Coordenadas no canto — detalhe de marca */
+    .hero-coords {
+      position: absolute;
+      bottom: 28px;
+      right: 48px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      color: rgba(255,255,255,0.2);
+      text-transform: uppercase;
+      z-index: 1;
     }
 
     /* BENEFITS */
@@ -546,7 +621,7 @@
       position: absolute;
       top: 10px;
       left: 10px;
-      background: #8b5a2b;
+      background: #9c7248;
       color: white;
       font-size: 10px;
       font-weight: 700;
@@ -603,7 +678,7 @@
     }
 
     .product-btn:hover {
-      background: #8b5a2b;
+      background: #9c7248;
       border-color: var(--accent);
       color: white;
     }
@@ -795,7 +870,7 @@
     }
 
     .theme-toggle:hover {
-      background: #8b5a2b;
+      background: #9c7248;
     }
 
     /* RESPONSIVE */
@@ -819,9 +894,11 @@
       }
 
       .hero {
-        padding: 40px 20px;
-        height: 70vh;
+        padding: 36px 20px 44px;
+        height: 85vh;
       }
+      .hero-coords { right: 20px; bottom: 16px; font-size: 9px; }
+      .hero h1 { letter-spacing: 1px; }
 
       .benefits {
         padding: 16px 20px;
@@ -1251,11 +1328,20 @@
 <body>
 
   <!-- ANNOUNCEMENT -->
-  <div class="announcement">Envios para todo o Brasil — Frete gratis acima de R$ 299</div>
+  <div class="announcement">MTN Co. · Envios para todo o Brasil — Frete grátis acima de R$ 299</div>
 
   <!-- NAVBAR -->
   <nav>
-    <a href="/index.html" class="nav-logo">Be<span>You</span></a>
+    <a href="/index.html" class="nav-logo"><svg width="38" height="30" viewBox="0 0 38 30" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;flex-shrink:0">
+  <!-- Montanha esquerda (maior) -->
+  <polyline points="1,29 13,4 19,14 25,4 37,29" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="miter"/>
+  <!-- Base fechando -->
+  <line x1="1" y1="29" x2="37" y2="29" stroke="currentColor" stroke-width="2.4"/>
+  <!-- Losango vale esquerdo -->
+  <polygon points="13,4 10,10 13,16 16,10" fill="currentColor"/>
+  <!-- Losango vale direito -->
+  <polygon points="25,4 22,10 25,16 28,10" fill="currentColor"/>
+</svg> MTN</a>
     <ul class="nav-links">
       <li>
         <a href="#">Shop</a>
@@ -1314,11 +1400,11 @@
   <!-- HERO -->
   <section class="hero">
     <div class="hero-content">
-      <span class="hero-tag">Nova Colecao 2026</span>
-      <h1>BE<br><span>YOU</span><br>SEMPRE</h1>
-      <p>Moda que fala a sua lingua. Streetwear autentico para quem nao tem medo de ser diferente.</p>
+      <span class="hero-tag">Nova Coleção 2026 · MTN Co.</span>
+      <h1>CLIMB<br><em>HIGHER</em><br><span class="outline">MTN</span></h1>
+      <p>Feito pra quem enfrenta. Streetwear de altitude para quem não tem medo do topo.</p>
       <div class="hero-btns">
-        <a href="#novidades" class="btn-hero btn-hero-primary">Ver Colecao</a>
+        <a href="#novidades" class="btn-hero btn-hero-primary">Ver Coleção</a>
         <a href="#categorias" class="btn-hero btn-hero-secondary">Explorar</a>
       </div>
     </div>
@@ -1439,8 +1525,8 @@
   </footer>
 
   <script type="module">
-    import { getProdutosDestaque } from './app.js';
-    import { observarLogin, logout } from './app.js';
+    import { getProdutosDestaque } from "./db-structure.js";
+    import { observarLogin, logout } from "./auth.js";
 
     window.fazerLogout = logout;
 
@@ -1571,7 +1657,7 @@
   </div>
 
   <script type="module">
-    import { getPedidosDoUsuario } from './app.js';
+    import { getPedidosDoUsuario } from './db-structure.js';
 
     const statusMap = {
       pendente:  ['Pendente',  'badge-pendente'],
@@ -1686,7 +1772,7 @@
   </script>
 
   <script>
-    var carrinho = JSON.parse(localStorage.getItem('beyou-cart') || '[]');
+    var carrinho = JSON.parse(localStorage.getItem('mtn-cart') || '[]');
 
     function toggleCart() {
       document.getElementById('cartSidebar').classList.toggle('open');
@@ -1707,7 +1793,7 @@
       var existente = carrinho.find(function(i) { return i.id === produto.id; });
       if (existente) { existente.quantidade += 1; }
       else { carrinho.push({ id: produto.id, nome: produto.nome, preco: produto.preco, imagem: produto.imagem, quantidade: 1 }); }
-      localStorage.setItem('beyou-cart', JSON.stringify(carrinho));
+      localStorage.setItem('mtn-cart', JSON.stringify(carrinho));
       atualizarBadge();
       renderCarrinho();
       document.getElementById('cartSidebar').classList.add('open');
@@ -1716,7 +1802,7 @@
 
     function removerDoCarrinho(id) {
       carrinho = carrinho.filter(function(i) { return i.id !== id; });
-      localStorage.setItem('beyou-cart', JSON.stringify(carrinho));
+      localStorage.setItem('mtn-cart', JSON.stringify(carrinho));
       atualizarBadge();
       renderCarrinho();
     }
@@ -1726,7 +1812,7 @@
       if (item) {
         item.quantidade += delta;
         if (item.quantidade <= 0) { removerDoCarrinho(id); return; }
-        localStorage.setItem('beyou-cart', JSON.stringify(carrinho));
+        localStorage.setItem('mtn-cart', JSON.stringify(carrinho));
         atualizarBadge();
         renderCarrinho();
       }
@@ -1776,13 +1862,13 @@
       btn.textContent = 'Processando...';
       btn.disabled = true;
       try {
-        var { criarPedido } = await import('./app.js');
+        var { criarPedido } = await import('./db-structure.js');
         var itens = carrinho.map(function(i) {
           return { produtoId: i.id, nome: i.nome, quantidade: i.quantidade, preco: i.preco };
         });
         await criarPedido(user.uid, itens, {});
         carrinho = [];
-        localStorage.setItem('beyou-cart', '[]');
+        localStorage.setItem('mtn-cart', '[]');
         atualizarBadge();
         renderCarrinho();
         toggleCart();
@@ -1988,7 +2074,7 @@
 
   <!-- SCRIPT CONFIGURAÇÕES DE CONTA -->
   <script type="module">
-    import { db, auth } from './app.js';
+    import { db, auth } from './firebase-config.js';
     import { doc, getDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js';
     import {
       updatePassword, reauthenticateWithCredential,
@@ -2338,24 +2424,6 @@
         window.contaFecharExcluir && window.contaFecharExcluir();
       }
     });
-  </script>
-
-  <script>
-    // Abre painel correto se vier de redirect (conta.html / meus-pedidos.html)
-    (function() {
-      var panel = sessionStorage.getItem('beyou-open-panel');
-      if (!panel) return;
-      sessionStorage.removeItem('beyou-open-panel');
-      window.addEventListener('DOMContentLoaded', function() {
-        setTimeout(function() {
-          if (panel === 'pedidos' && typeof window.abrirPedidosModal === 'function') {
-            window.abrirPedidosModal();
-          } else if (panel === 'conta' && typeof window.abrirContaModal === 'function') {
-            window.abrirContaModal();
-          }
-        }, 600); // aguarda auth state
-      });
-    })();
   </script>
 </body>
 

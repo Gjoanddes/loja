@@ -7,27 +7,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - BeYou</title>
+  <title>Login — MTN Co.</title>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     :root[data-theme="light"] {
-      --bg: #fdfbf7;
-      --surface: #ffffff;
-      --border: #e0d8c8;
-      --accent: #8b5a2b;
-      --accent2: #a0522d;
-      --text: #332b22;
-      --muted: #8a7b66;
+      --bg: #f2ede8;
+      --bg2: #e8e2da;
+      --surface: #faf8f5;
+      --border: #ccc5bb;
+      --text: #1a1917;
+      --muted: #6b6259;
+      --accent: #9c7248;
+      --accent2: #8c6238;
+      --card-bg: #faf8f5;
     }
     :root[data-theme="dark"] {
-      --bg: #121212;
-      --surface: #1e1e1e;
-      --border: #4b4a4a;
-      --accent: #8b5a2b;
-      --accent2: #a0522d;
-      --text: #f5f5f5;
-      --muted: #aaaaaa;
+      --bg: #141210;
+      --bg2: #1e1c19;
+      --surface: #242220;
+      --border: #3a3733;
+      --text: #f0ece6;
+      --muted: #9c9488;
+      --accent: #9c7248;
+      --accent2: #8c6238;
+      --card-bg: #1e1c19;
     }
     body {
       font-family: 'DM Sans', sans-serif;
@@ -69,7 +73,7 @@
       letter-spacing: -1px;
       margin-bottom: 8px;
     }
-    .logo span { color: var(--accent); }
+    .logo { display:flex; align-items:center; gap:10px; } .logo span { color: var(--accent); }
     .subtitle { font-size: 14px; color: var(--muted); margin-bottom: 36px; }
     .tabs {
       display: flex;
@@ -180,8 +184,17 @@
 <div class="bg-blob blob1"></div>
 <div class="bg-blob blob2"></div>
 <div class="card">
-  <div class="logo">Be<span>You</span></div>
-  <div class="subtitle">Bem-vindo de volta!</div>
+  <div class="logo" style="display:flex;align-items:center;gap:10px"><svg width="38" height="30" viewBox="0 0 38 30" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;flex-shrink:0">
+  <!-- Montanha esquerda (maior) -->
+  <polyline points="1,29 13,4 19,14 25,4 37,29" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="miter"/>
+  <!-- Base fechando -->
+  <line x1="1" y1="29" x2="37" y2="29" stroke="currentColor" stroke-width="2.4"/>
+  <!-- Losango vale esquerdo -->
+  <polygon points="13,4 10,10 13,16 16,10" fill="currentColor"/>
+  <!-- Losango vale direito -->
+  <polygon points="25,4 22,10 25,16 28,10" fill="currentColor"/>
+</svg> <span style="letter-spacing:-1px">MTN</span></div>
+  <div class="subtitle">Mountain Streetwear · Marechal Floriano, ES</div>
   <div class="tabs">
     <button class="tab active" id="tab-entrar" onclick="trocarAba('login', this)">Entrar</button>
     <button class="tab" id="tab-cadastro" onclick="trocarAba('cadastro', this)">Cadastrar</button>
@@ -217,7 +230,7 @@
   <div class="voltar"><a href="/index.html">Voltar para a loja</a></div>
 </div>
 <script type="module">
-  import { login, cadastrarUsuario, verificarAdmin } from './app.js';
+  import { login, cadastrarUsuario, verificarAdmin } from "./auth.js";
 
   window.trocarAba = function(aba, el) {
     document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });

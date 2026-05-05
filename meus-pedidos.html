@@ -1,15 +1,198 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="light">
+<script>
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+</script>
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="0;url=/index.html#pedidos">
-  <title>Redirecionando... — BeYou</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meus Pedidos — MTN Co.</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root[data-theme="light"] {
+      --bg: #f2ede8;
+      --bg2: #e8e2da;
+      --surface: #faf8f5;
+      --border: #ccc5bb;
+      --text: #1a1917;
+      --muted: #6b6259;
+      --accent: #9c7248;
+      --accent2: #8c6238;
+      --card-bg: #faf8f5;
+    }
+    :root[data-theme="dark"] {
+      --bg: #141210;
+      --bg2: #1e1c19;
+      --surface: #242220;
+      --border: #3a3733;
+      --text: #f0ece6;
+      --muted: #9c9488;
+      --accent: #9c7248;
+      --accent2: #8c6238;
+      --card-bg: #1e1c19;
+    }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--bg); border-bottom: 1px solid var(--border);
+      padding: 0 40px; height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; text-decoration: none; color: var(--text); }
+    .nav-logo { display:flex; align-items:center; gap:8px; } .nav-logo span { color: var(--accent); }
+    .nav-back { font-size: 13px; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    .nav-back:hover { color: var(--text); }
+
+    .container { max-width: 800px; margin: 0 auto; padding: 48px 24px; }
+    .page-title { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; margin-bottom: 8px; }
+    .page-sub { font-size: 14px; color: var(--muted); margin-bottom: 36px; }
+
+    .pedido-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 24px; margin-bottom: 16px;
+      transition: border-color 0.2s;
+    }
+    .pedido-card:hover { border-color: var(--accent); }
+    .pedido-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 16px; flex-wrap: wrap; gap: 8px;
+    }
+    .pedido-id { font-size: 12px; color: var(--muted); }
+    .pedido-data { font-size: 12px; color: var(--muted); }
+    .pedido-status {
+      display: inline-block; padding: 4px 12px; border-radius: 20px;
+      font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .status-pendente { background: #fef3c7; color: #92400e; }
+    .status-pago { background: #d1fae5; color: #065f46; }
+    .status-enviado { background: #dbeafe; color: #1e40af; }
+    .status-entregue { background: #d1fae5; color: #065f46; }
+    .status-cancelado { background: #fee2e2; color: #991b1b; }
+
+    .pedido-itens { margin-bottom: 16px; }
+    .pedido-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 0; border-bottom: 1px solid var(--border);
+    }
+    .pedido-item:last-child { border-bottom: none; }
+    .pedido-item-img {
+      width: 48px; height: 60px; border-radius: 6px;
+      background: var(--bg2); overflow: hidden; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-size: 20px;
+    }
+    .pedido-item-img img { width: 100%; height: 100%; object-fit: cover; }
+    .pedido-item-nome { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+    .pedido-item-qty { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .pedido-item-preco { margin-left: auto; font-size: 14px; font-weight: 700; color: var(--accent); }
+
+    .pedido-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 12px; border-top: 1px solid var(--border);
+    }
+    .pedido-total-label { font-size: 13px; color: var(--muted); }
+    .pedido-total-value { font-size: 18px; font-weight: 700; color: var(--accent); }
+
+    .empty-state {
+      text-align: center; padding: 80px 20px; color: var(--muted);
+    }
+    .empty-state-icon { font-size: 56px; margin-bottom: 16px; }
+    .empty-state h3 { font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+    .empty-state p { font-size: 14px; margin-bottom: 24px; }
+    .btn-shop {
+      display: inline-block; padding: 12px 28px; background: var(--accent);
+      color: white; text-decoration: none; border-radius: 10px;
+      font-size: 14px; font-weight: 600; transition: opacity 0.2s;
+    }
+    .btn-shop:hover { opacity: 0.85; }
+
+    .loading { text-align: center; padding: 60px; color: var(--muted); font-size: 14px; }
+  </style>
 </head>
 <body>
-  <script>
-    // Abre o painel correto no index ao ser redirecionado
-    sessionStorage.setItem('beyou-open-panel', 'pedidos');
-    window.location.replace('/index.html');
-  </script>
+
+<nav>
+  <a href="/index.html" class="nav-logo"><svg width="38" height="30" viewBox="0 0 38 30" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;flex-shrink:0">
+  <!-- Montanha esquerda (maior) -->
+  <polyline points="1,29 13,4 19,14 25,4 37,29" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="miter"/>
+  <!-- Base fechando -->
+  <line x1="1" y1="29" x2="37" y2="29" stroke="currentColor" stroke-width="2.4"/>
+  <!-- Losango vale esquerdo -->
+  <polygon points="13,4 10,10 13,16 16,10" fill="currentColor"/>
+  <!-- Losango vale direito -->
+  <polygon points="25,4 22,10 25,16 28,10" fill="currentColor"/>
+</svg> MTN</a>
+  <a href="/index.html" class="nav-back">← Voltar para a loja</a>
+</nav>
+
+<div class="container">
+  <div class="page-title">Meus Pedidos</div>
+  <div class="page-sub">Acompanhe o status dos seus pedidos</div>
+  <div id="pedidos-container">
+    <div class="loading">Carregando seus pedidos...</div>
+  </div>
+</div>
+
+<script type="module">
+  import { observarLogin } from "./auth.js";
+  import { getPedidosDoUsuario } from "./db-structure.js";
+
+  const statusLabels = {
+    pendente: 'Pendente', pago: 'Pago',
+    enviado: 'Enviado', entregue: 'Entregue', cancelado: 'Cancelado'
+  };
+
+  function formatarData(ts) {
+    if (!ts) return '';
+    var d = ts.toDate ? ts.toDate() : new Date(ts.seconds ? ts.seconds * 1000 : ts);
+    return d.toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
+  }
+
+  observarLogin(async (usuario) => {
+    const container = document.getElementById('pedidos-container');
+    if (!usuario) {
+      container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🔒</div><h3>Faca login</h3><p>Voce precisa estar logado para ver seus pedidos.</p><a href="/login.html" class="btn-shop">Fazer Login</a></div>';
+      return;
+    }
+
+    const pedidos = await getPedidosDoUsuario(usuario.uid);
+
+    if (!pedidos || pedidos.length === 0) {
+      container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📦</div><h3>Nenhum pedido ainda</h3><p>Que tal dar uma olhada na nossa colecao?</p><a href="/index.html" class="btn-shop">Ver Colecao</a></div>';
+      return;
+    }
+
+    container.innerHTML = pedidos.map(p => `
+      <div class="pedido-card">
+        <div class="pedido-header">
+          <div>
+            <div class="pedido-id">Pedido #${p.id.slice(-8).toUpperCase()}</div>
+            <div class="pedido-data">${formatarData(p.criadoEm)}</div>
+          </div>
+          <span class="pedido-status status-${p.status}">${statusLabels[p.status] || p.status}</span>
+        </div>
+        <div class="pedido-itens">
+          ${(p.itens || []).map(item => `
+            <div class="pedido-item">
+              <div class="pedido-item-img">${item.imagem ? `<img src="${item.imagem}" alt="">` : '👕'}</div>
+              <div>
+                <div class="pedido-item-nome">${item.nome}</div>
+                <div class="pedido-item-qty">Qtd: ${item.quantidade}</div>
+              </div>
+              <div class="pedido-item-preco">R$ ${Number(item.preco * item.quantidade).toFixed(2).replace('.', ',')}</div>
+            </div>
+          `).join('')}
+        </div>
+        <div class="pedido-footer">
+          <span class="pedido-total-label">Total do pedido</span>
+          <span class="pedido-total-value">R$ ${Number(p.total).toFixed(2).replace('.', ',')}</span>
+        </div>
+      </div>
+    `).join('');
+  });
+</script>
+
 </body>
 </html>
