@@ -389,9 +389,17 @@
         </div>
       </div>
     </div>
-    <div class="drawer-footer">
-      <button class="btn btn-outline" onclick="fecharDrawer()">Cancelar</button>
-      <button class="btn btn-primary" id="btnSalvar" onclick="salvarProduto()">Salvar Produto</button>
+    <div class="drawer-footer" style="flex-direction:column;gap:10px;align-items:stretch">
+      <div id="uploadProgress" style="display:none">
+        <div style="height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:6px">
+          <div id="uploadBar" style="height:100%;background:var(--accent);border-radius:2px;width:0%;transition:width 0.3s"></div>
+        </div>
+        <div id="uploadLabel" style="font-size:11px;color:var(--muted);text-align:center"></div>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:flex-end">
+        <button class="btn btn-outline" onclick="fecharDrawer()">Cancelar</button>
+        <button class="btn btn-primary" id="btnSalvar" onclick="salvarProduto()">Salvar Produto</button>
+      </div>
     </div>
   </div>
 </div>
@@ -413,8 +421,31 @@
 <script type="module">
   import { protegerPaginaAdmin, logout } from './auth.js';
   import { getProdutos, adicionarProduto, atualizarProduto, removerProduto, getPedidos, atualizarPedido } from './db-structure.js';
-  import { auth } from './firebase-config.js';
+  import { auth, storage } from './firebase-config.js';
   import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js';
+  import {
+    ref, uploadBytes, getDownloadURL, deleteObject
+  } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-storage.js';
+
+  // ── Upload de imagem para Firebase Storage ───────────────────────────────
+  async function uploadImagem(file, produtoId, index) {
+    const ext  = file.name.split('.').pop().toLowerCase();
+    const path = `produtos/${produtoId}/${Date.now()}_${index}.${ext}`;
+    const storageRef = ref(storage, path);
+    await uploadBytes(storageRef, file);
+    return await getDownloadURL(storageRef);
+  }
+
+  // Converte base64 para File (para imagens já existentes convertidas)
+  function base64ToFile(dataUrl, filename) {
+    const arr  = dataUrl.split(',');
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8 = new Uint8Array(n);
+    while (n--) u8[n] = bstr.charCodeAt(n);
+    return new File([u8], filename, { type: mime });
+  }
 
   protegerPaginaAdmin();
   window.fazerLogout = logout;
@@ -559,7 +590,10 @@
     Array.from(event.target.files).forEach(file => {
       if (!file.type.startsWith('image/')) return;
       const r = new FileReader();
-      r.onload = e => { window._imagensBase64.push({url:e.target.result,existente:false}); addThumb(e.target.result); };
+      r.onload = e => {
+        window._imagensBase64.push({url: e.target.result, existente: false, file: file});
+        addThumb(e.target.result);
+      };
       r.readAsDataURL(file);
     });
   };
@@ -573,28 +607,57 @@
     const nome = document.getElementById('p-nome').value.trim();
     const preco = parseFloat(document.getElementById('p-preco').value);
     const categoria = document.getElementById('p-categoria').value;
-    const fb = document.getElementById('fbProduto');
+    const fb  = document.getElementById('fbProduto');
     const btn = document.getElementById('btnSalvar');
-    if (!nome || !preco || !categoria) { fb.textContent='⚠️ Preencha nome, preço e categoria.'; fb.className='fb err'; return; }
-    btn.disabled=true; btn.textContent='Salvando...';
-    const dados = {
-      nome, preco,
-      precoPromocional: parseFloat(document.getElementById('p-preco-promo').value)||null,
-      categoria,
-      subcategoria: document.getElementById('p-subcategoria').value,
-      tamanhos: document.getElementById('p-tamanhos').value.split(',').map(s=>s.trim()).filter(Boolean),
-      cores: window._coresAtuais,
-      descricao: document.getElementById('p-descricao').value.trim(),
-      destaque: document.getElementById('p-destaque').checked,
-      imagens: window._imagensBase64.map(i=>i.url),
-    };
-    const id = document.getElementById('p-id').value;
+    if (!nome || !preco || !categoria) {
+      fb.textContent = '⚠️ Preencha nome, preço e categoria.';
+      fb.className = 'fb err'; return;
+    }
+    btn.disabled = true;
+
+    // Novas imagens (não existentes) precisam ser uploadadas
+    const novas = window._imagensBase64.filter(i => !i.existente);
+    const existentes = window._imagensBase64.filter(i => i.existente).map(i => i.url);
+
     try {
+      // Precisa de um ID temporário para montar o path antes de criar o doc
+      const idTemp = document.getElementById('p-id').value || ('tmp_' + Date.now());
+
+      // Upload de cada imagem nova com progresso no botão
+      const urlsNovas = [];
+      for (let i = 0; i < novas.length; i++) {
+        btn.textContent = `Enviando imagem ${i+1}/${novas.length}...`;
+        const file = novas[i].file || base64ToFile(novas[i].url, `img_${i}.jpg`);
+        const url  = await uploadImagem(file, idTemp, i);
+        urlsNovas.push(url);
+      }
+
+      btn.textContent = 'Salvando...';
+      const dados = {
+        nome, preco,
+        precoPromocional: parseFloat(document.getElementById('p-preco-promo').value) || null,
+        categoria,
+        subcategoria: document.getElementById('p-subcategoria').value,
+        tamanhos:  document.getElementById('p-tamanhos').value.split(',').map(s=>s.trim()).filter(Boolean),
+        cores:     window._coresAtuais,
+        descricao: document.getElementById('p-descricao').value.trim(),
+        destaque:  document.getElementById('p-destaque').checked,
+        imagens:   [...existentes, ...urlsNovas],
+      };
+
+      const id = document.getElementById('p-id').value;
       if (id) { await atualizarProduto(id, dados); showToast('✅ Produto atualizado!'); }
       else     { await adicionarProduto(dados, []); showToast('✅ Produto adicionado!'); }
-      fecharDrawer(); carregarProdutos();
-    } catch(e) { fb.textContent='❌ Erro: '+e.message; fb.className='fb err'; }
-    btn.disabled=false;
+
+      fecharDrawer();
+      carregarProdutos();
+    } catch(e) {
+      console.error(e);
+      fb.textContent = '❌ Erro: ' + (e.message || e);
+      fb.className = 'fb err';
+    }
+    btn.disabled = false;
+    btn.textContent = 'Salvar Produto';
   };
 
   window.editarProduto = id => { const p = window._produtos.find(x=>x.id===id); if(p) abrirDrawer(p); };
