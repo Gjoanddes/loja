@@ -11,7 +11,4 @@
       "y/**"
     ]
   },
-  "storage": {
-    "rules": "storage.rules"
-  }
 }
