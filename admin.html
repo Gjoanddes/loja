@@ -421,30 +421,35 @@
 <script type="module">
   import { protegerPaginaAdmin, logout } from './auth.js';
   import { getProdutos, adicionarProduto, atualizarProduto, removerProduto, getPedidos, atualizarPedido } from './db-structure.js';
-  import { auth, storage } from './firebase-config.js';
+  import { auth } from './firebase-config.js';
   import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js';
-  import {
-    ref, uploadBytes, getDownloadURL, deleteObject
-  } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-storage.js';
 
-  // ── Upload de imagem para Firebase Storage ───────────────────────────────
-  async function uploadImagem(file, produtoId, index) {
-    const ext  = file.name.split('.').pop().toLowerCase();
-    const path = `produtos/${produtoId}/${Date.now()}_${index}.${ext}`;
-    const storageRef = ref(storage, path);
-    await uploadBytes(storageRef, file);
-    return await getDownloadURL(storageRef);
-  }
+  // ── Upload de imagem para Cloudinary ────────────────────────────────────
+  const CLOUDINARY_CLOUD = 'dlxeuhj';
+  const CLOUDINARY_PRESET = 'mtn_produtos';
 
-  // Converte base64 para File (para imagens já existentes convertidas)
-  function base64ToFile(dataUrl, filename) {
-    const arr  = dataUrl.split(',');
-    const mime = arr[0].match(/:(.*?);/)[1];
-    const bstr = atob(arr[1]);
-    let n = bstr.length;
-    const u8 = new Uint8Array(n);
-    while (n--) u8[n] = bstr.charCodeAt(n);
-    return new File([u8], filename, { type: mime });
+  async function uploadImagem(file, index, total) {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', CLOUDINARY_PRESET);
+    formData.append('folder', 'produtos');
+
+    // Atualiza barra de progresso
+    const bar   = document.getElementById('uploadBar');
+    const label = document.getElementById('uploadLabel');
+    const prog  = document.getElementById('uploadProgress');
+    if (prog) prog.style.display = 'block';
+    if (label) label.textContent = `Enviando imagem ${index + 1} de ${total}...`;
+    if (bar) bar.style.width = Math.round(((index) / total) * 100) + '%';
+
+    const res  = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, {
+      method: 'POST', body: formData
+    });
+    if (!res.ok) throw new Error('Erro no upload: ' + res.statusText);
+    const data = await res.json();
+
+    if (bar) bar.style.width = Math.round(((index + 1) / total) * 100) + '%';
+    return data.secure_url;
   }
 
   protegerPaginaAdmin();
@@ -623,14 +628,20 @@
       // Precisa de um ID temporário para montar o path antes de criar o doc
       const idTemp = document.getElementById('p-id').value || ('tmp_' + Date.now());
 
-      // Upload de cada imagem nova com progresso no botão
+      // Upload de cada imagem nova para Cloudinary
       const urlsNovas = [];
       for (let i = 0; i < novas.length; i++) {
-        btn.textContent = `Enviando imagem ${i+1}/${novas.length}...`;
-        const file = novas[i].file || base64ToFile(novas[i].url, `img_${i}.jpg`);
-        const url  = await uploadImagem(file, idTemp, i);
+        const file = novas[i].file;
+        if (!file) continue;
+        const url = await uploadImagem(file, i, novas.length);
         urlsNovas.push(url);
       }
+
+      // Finaliza barra
+      const bar   = document.getElementById('uploadBar');
+      const label = document.getElementById('uploadLabel');
+      if (bar) bar.style.width = '100%';
+      if (label) label.textContent = 'Salvando no banco de dados...';
 
       btn.textContent = 'Salvando...';
       const dados = {
@@ -652,6 +663,8 @@
       fecharDrawer();
       carregarProdutos();
     } catch(e) {
+      const prog = document.getElementById('uploadProgress');
+      if (prog) prog.style.display = 'none';
       console.error(e);
       fb.textContent = '❌ Erro: ' + (e.message || e);
       fb.className = 'fb err';
