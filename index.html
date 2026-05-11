@@ -498,7 +498,63 @@
       z-index: 1;
     }
 
-    /* BENEFITS */
+    /* VITRINE TOOLBAR */
+    .vitrine-toolbar {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 28px; flex-wrap: wrap;
+    }
+    .vitrine-search-wrap { position: relative; flex: 1; min-width: 180px; max-width: 320px; }
+    .vitrine-search-wrap::before {
+      content: '🔍'; position: absolute; left: 12px; top: 50%;
+      transform: translateY(-50%); font-size: 13px; pointer-events: none;
+    }
+    .vitrine-search {
+      width: 100%; background: var(--surface); border: 1px solid var(--border);
+      color: var(--text); padding: 10px 14px 10px 36px;
+      border-radius: 8px; font-size: 13px; font-family: inherit;
+      outline: none; transition: border-color 0.2s;
+    }
+    .vitrine-search:focus { border-color: var(--accent); }
+    .vitrine-search::placeholder { color: var(--muted); }
+    .vitrine-filters { display: flex; gap: 8px; flex-wrap: wrap; }
+    .vf-pill {
+      padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 600;
+      cursor: pointer; border: 1px solid var(--border); background: transparent;
+      color: var(--muted); transition: all 0.18s; font-family: inherit;
+      text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .vf-pill:hover { border-color: var(--accent); color: var(--accent); }
+    .vf-pill.active { background: var(--accent); border-color: var(--accent); color: white; }
+    .vitrine-sort {
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--text); padding: 9px 30px 9px 12px; border-radius: 8px;
+      font-size: 12px; font-family: inherit; outline: none; cursor: pointer;
+      appearance: none; margin-left: auto;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%23888' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 10px center;
+      transition: border-color 0.2s;
+    }
+    .vitrine-sort:focus { border-color: var(--accent); }
+    .vitrine-count { font-size: 12px; color: var(--muted); white-space: nowrap; }
+    .vitrine-empty {
+      grid-column: 1/-1; text-align: center;
+      padding: 60px 20px; color: var(--muted);
+    }
+    .vitrine-empty-icon { font-size: 40px; margin-bottom: 12px; }
+    .vitrine-empty h3 { font-size: 16px; color: var(--text); margin-bottom: 6px; font-family: 'Syne', sans-serif; }
+
+    /* Wishlist no card */
+    .product-wish {
+      position: absolute; top: 10px; right: 10px;
+      background: rgba(0,0,0,0.4); border: none; border-radius: 50%;
+      width: 32px; height: 32px; display: flex; align-items: center;
+      justify-content: center; cursor: pointer; font-size: 14px;
+      transition: all 0.2s; backdrop-filter: blur(4px);
+      opacity: 0; pointer-events: none;
+    }
+    .product-card:hover .product-wish { opacity: 1; pointer-events: auto; }
+    .product-wish:hover { background: rgba(0,0,0,0.7); transform: scale(1.1); }
+    .product-wish.wished { opacity: 1; pointer-events: auto; }
     .benefits {
       border-bottom: 1px solid var(--border);
       padding: 20px 40px;
@@ -999,7 +1055,35 @@
     .cart-qty { font-size: 14px; font-weight: 600; min-width: 20px; text-align: center; }
     .cart-remove { margin-left: auto; background: none; border: none; color: var(--muted); cursor: pointer; font-size: 16px; transition: color 0.2s; }
     .cart-remove:hover { color: #e53e3e; }
-    .cart-footer { padding: 20px 24px; border-top: 1px solid var(--border); }
+    .cart-coupon {
+      display: flex; gap: 8px; margin-bottom: 14px;
+    }
+    .cart-coupon input {
+      flex: 1; background: var(--bg2); border: 1px solid var(--border);
+      color: var(--text); padding: 10px 12px; border-radius: 8px;
+      font-size: 13px; font-family: inherit; outline: none;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      transition: border-color 0.2s;
+    }
+    .cart-coupon input:focus { border-color: var(--accent); }
+    .cart-coupon input::placeholder { text-transform: none; letter-spacing: 0; color: var(--muted); }
+    .cart-coupon-btn {
+      padding: 10px 16px; background: var(--surface2);
+      border: 1px solid var(--border); border-radius: 8px;
+      color: var(--text); font-size: 12px; font-weight: 700;
+      cursor: pointer; transition: all 0.2s; font-family: 'Syne', sans-serif;
+      white-space: nowrap;
+    }
+    .cart-coupon-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .cart-coupon-msg { font-size: 12px; margin-bottom: 10px; padding: 8px 12px; border-radius: 7px; display: none; }
+    .cart-coupon-msg.ok  { background: rgba(76,175,130,0.15); color: #4caf82; display: block; }
+    .cart-coupon-msg.err { background: rgba(224,82,82,0.15);  color: #e05252; display: block; }
+    .cart-desconto {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 13px; margin-bottom: 10px;
+    }
+    .cart-desconto-label { color: var(--muted); }
+    .cart-desconto-value { color: #4caf82; font-weight: 700; font-family: 'DM Mono', monospace; }
     .cart-subtotal { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
     .cart-subtotal-label { font-size: 14px; color: var(--muted); }
     .cart-subtotal-value { font-size: 20px; font-weight: 700; color: var(--accent); }
@@ -1445,14 +1529,29 @@
 
   <!-- NOVIDADES -->
   <section class="section" id="novidades">
-    <div class="section-header">
-      <h2 class="section-title">Novidades</h2>
-      <a href="#" class="ver-tudo">Ver tudo →</a>
+    <div class="vitrine-toolbar">
+      <div class="vitrine-search-wrap">
+        <input class="vitrine-search" id="vitrineBusca" placeholder="Buscar produto..." oninput="filtrarVitrine()">
+      </div>
+      <div class="vitrine-filters">
+        <button class="vf-pill active" data-cat="" onclick="setCategoria('',this)">Todos</button>
+        <button class="vf-pill" data-cat="roupas" onclick="setCategoria('roupas',this)">Roupas</button>
+        <button class="vf-pill" data-cat="acessorios" onclick="setCategoria('acessorios',this)">Acessórios</button>
+        <button class="vf-pill" data-cat="destaque" onclick="setCategoria('destaque',this)">⭐ Destaque</button>
+      </div>
+      <select class="vitrine-sort" id="vitrineSort" onchange="filtrarVitrine()">
+        <option value="destaque">Em destaque</option>
+        <option value="menor">Menor preço</option>
+        <option value="maior">Maior preço</option>
+        <option value="az">A → Z</option>
+        <option value="za">Z → A</option>
+      </select>
+      <span class="vitrine-count" id="vitrineCount"></span>
     </div>
     <div class="products-grid" id="products-container">
-      <div class="empty-products">
-        <h3>Em breve</h3>
-        <p>Os produtos estao sendo cadastrados pelo admin.</p>
+      <div class="vitrine-empty">
+        <div class="vitrine-empty-icon">👕</div>
+        <h3>Carregando produtos...</h3>
       </div>
     </div>
   </section>
@@ -1482,9 +1581,8 @@
   <footer>
     <div class="footer-grid">
       <div>
-        <div class="footer-logo">Be<span>You</span></div>
-        <p class="footer-desc">Streetwear autentico para quem nao tem medo de ser diferente. Moda jovem, atitude real.
-        </p>
+        <div class="footer-logo"><svg width="28" height="22" viewBox="0 0 38 30" fill="none" style="display:inline-block;vertical-align:middle;margin-right:8px"><polyline points="1,29 13,4 19,14 25,4 37,29" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="miter"/><line x1="1" y1="29" x2="37" y2="29" stroke="currentColor" stroke-width="2.4"/><polygon points="13,4 10,10 13,16 16,10" fill="currentColor"/><polygon points="25,4 22,10 25,16 28,10" fill="currentColor"/></svg>MTN</div>
+        <p class="footer-desc">Mountain Streetwear. Feito pra quem enfrenta.</p>
         <div class="footer-socials">
           <a href="#" class="footer-social">📷</a>
           <a href="#" class="footer-social">💬</a>
@@ -1526,12 +1624,11 @@
   </footer>
 
   <script type="module">
-    import { getProdutosDestaque } from "./db-structure.js";
+    import { getProdutos, registrarIntencaoCompra } from "./db-structure.js";
     import { observarLogin, logout } from "./auth.js";
 
     window.fazerLogout = logout;
 
-    // Atualiza menu conforme estado de login
     observarLogin((usuario) => {
       window._currentUser = usuario;
       const loginItem   = document.getElementById('menu-login-item');
@@ -1554,39 +1651,111 @@
       }
     });
 
-    // Botão de logout no menu desktop
     document.getElementById('menu-logout-item').addEventListener('click', (e) => {
-      e.preventDefault();
-      logout();
+      e.preventDefault(); logout();
     });
+
+    window.registrarIntencaoCompra = registrarIntencaoCompra;
+
+    // ── Vitrine com busca + filtro + ordenação ────────────────────────────
+    window._todosProdutos = [];
+    window._categoriaAtiva = '';
+    window._wishlist = JSON.parse(localStorage.getItem('mtn-wishlist') || '[]');
+
+    function formatReal(v) { return 'R$ ' + Number(v).toFixed(2).replace('.', ','); }
+
+    function renderProdutos(lista) {
+      const container = document.getElementById('products-container');
+      const count     = document.getElementById('vitrineCount');
+      if (count) count.textContent = lista.length + ' produto' + (lista.length !== 1 ? 's' : '');
+
+      if (!lista.length) {
+        container.innerHTML = `<div class="vitrine-empty">
+          <div class="vitrine-empty-icon">🔍</div>
+          <h3>Nenhum produto encontrado</h3>
+          <p>Tente outro filtro ou termo de busca.</p>
+        </div>`;
+        return;
+      }
+
+      container.innerHTML = lista.map(p => {
+        const preco = p.precoPromocional || p.preco;
+        const wished = window._wishlist.includes(p.id);
+        return `<div class="product-card">
+          <a href="/produto.html?id=${p.id}" style="display:block;text-decoration:none;color:inherit">
+            <div class="product-img">
+              ${p.imagens?.[0] ? `<img src="${p.imagens[0]}" alt="${p.nome}" loading="lazy">` : '<span style="font-size:40px;opacity:.3">👕</span>'}
+              ${p.precoPromocional ? `<span class="product-badge">SALE</span>` : ''}
+              <button class="product-wish ${wished?'wished':''}"
+                onclick="event.preventDefault();toggleWish('${p.id}',this)">${wished?'❤️':'🤍'}</button>
+            </div>
+            <div class="product-info">
+              <div class="product-name">${p.nome}</div>
+              <div>
+                ${p.precoPromocional ? `<span class="product-price-old">${formatReal(p.preco)}</span>` : ''}
+                <span class="product-price">${formatReal(preco)}</span>
+              </div>
+              <div class="product-parcel">6x de R$ ${(preco/6).toFixed(2).replace('.',',')} sem juros</div>
+            </div>
+          </a>
+          <div style="padding:0 14px 14px">
+            <button class="product-btn" onclick="adicionarAoCarrinho({id:'${p.id}',nome:'${p.nome}',preco:${preco},imagem:${p.imagens?.[0]?JSON.stringify(p.imagens[0]):'null'}})">
+              Adicionar ao Carrinho
+            </button>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    window.filtrarVitrine = function() {
+      const q    = document.getElementById('vitrineBusca').value.toLowerCase().trim();
+      const sort = document.getElementById('vitrineSort').value;
+      const cat  = window._categoriaAtiva;
+
+      let lista = window._todosProdutos.filter(p => {
+        const matchQ   = !q || p.nome.toLowerCase().includes(q) || (p.descricao||'').toLowerCase().includes(q);
+        const matchCat = !cat || (cat === 'destaque' ? p.destaque : p.categoria === cat);
+        return matchQ && matchCat;
+      });
+
+      lista = lista.sort((a, b) => {
+        const pa = a.precoPromocional || a.preco;
+        const pb = b.precoPromocional || b.preco;
+        if (sort === 'menor') return pa - pb;
+        if (sort === 'maior') return pb - pa;
+        if (sort === 'az')    return a.nome.localeCompare(b.nome);
+        if (sort === 'za')    return b.nome.localeCompare(a.nome);
+        // destaque: destaques primeiro
+        return (b.destaque ? 1 : 0) - (a.destaque ? 1 : 0);
+      });
+
+      renderProdutos(lista);
+    };
+
+    window.setCategoria = function(cat, btn) {
+      window._categoriaAtiva = cat;
+      document.querySelectorAll('.vf-pill').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      filtrarVitrine();
+    };
+
+    window.toggleWish = function(id, btn) {
+      const idx = window._wishlist.indexOf(id);
+      if (idx >= 0) {
+        window._wishlist.splice(idx, 1);
+        btn.textContent = '🤍'; btn.classList.remove('wished');
+      } else {
+        window._wishlist.push(id);
+        btn.textContent = '❤️'; btn.classList.add('wished');
+      }
+      localStorage.setItem('mtn-wishlist', JSON.stringify(window._wishlist));
+    };
 
     async function carregarProdutos() {
       const container = document.getElementById('products-container');
-      const produtos = await getProdutosDestaque();
-      if (!produtos || produtos.length === 0) return;
-
-      container.innerHTML = produtos.map(p => `
-      <div class="product-card">
-        <a href="/produto.html?id=${p.id}" style="display:block;text-decoration:none;color:inherit">
-        <div class="product-img">
-          ${p.imagens && p.imagens[0]
-          ? `<img src="${p.imagens[0]}" alt="${p.nome}">`
-          : 'Sem imagem'}
-          ${p.precoPromocional ? `<span class="product-badge">SALE</span>` : ''}
-        </div>
-        <div class="product-info">
-          <div class="product-name">${p.nome}</div>
-          <div>
-            ${p.precoPromocional
-          ? `<span class="product-price-old">R$ ${Number(p.preco).toFixed(2).replace('.', ',')}</span>`
-          : ''}
-            <span class="product-price">R$ ${Number(p.precoPromocional || p.preco).toFixed(2).replace('.', ',')}</span>
-          </div>
-          <div class="product-parcel">6x de R$ ${(Number(p.precoPromocional || p.preco) / 6).toFixed(2).replace('.', ',')} sem juros</div>
-          <button class="product-btn" onclick="adicionarAoCarrinho({id:'${p.id}',nome:'${p.nome}',preco:${p.precoPromocional||p.preco},imagem:${p.imagens&&p.imagens[0]?JSON.stringify(p.imagens[0]):'null'}})">Adicionar ao Carrinho</button>
-        </div>
-      </div>
-    `).join('');
+      container.innerHTML = `<div class="vitrine-empty"><div class="vitrine-empty-icon" style="animation:spin 1s linear infinite">⟳</div><h3>Carregando...</h3></div>`;
+      window._todosProdutos = await getProdutos();
+      filtrarVitrine();
     }
 
     carregarProdutos();
@@ -1635,8 +1804,17 @@
     </div>
     <div class="cart-items" id="cartItems"></div>
     <div class="cart-footer" id="cartFooter" style="display:none">
+      <div class="cart-coupon">
+        <input type="text" id="cupomInput" placeholder="Código do cupom" maxlength="20">
+        <button class="cart-coupon-btn" onclick="aplicarCupom()">Aplicar</button>
+      </div>
+      <div class="cart-coupon-msg" id="cupomMsg"></div>
+      <div class="cart-desconto" id="cartDescontoRow" style="display:none">
+        <span class="cart-desconto-label">🏷️ Desconto <span id="cupomNome"></span></span>
+        <span class="cart-desconto-value" id="cartDesconto"></span>
+      </div>
       <div class="cart-subtotal">
-        <span class="cart-subtotal-label">Subtotal</span>
+        <span class="cart-subtotal-label">Total</span>
         <span class="cart-subtotal-value" id="cartTotal">R$ 0,00</span>
       </div>
       <button class="cart-checkout-btn" onclick="finalizarCompra()">Finalizar Compra</button>
@@ -1799,6 +1977,9 @@
       renderCarrinho();
       document.getElementById('cartSidebar').classList.add('open');
       document.getElementById('cartOverlay').classList.add('open');
+      // Registra intenção de compra (usa o id base sem variante)
+      var idBase = (produto.id || '').split('-')[0];
+      if (idBase && window.registrarIntencaoCompra) window.registrarIntencaoCompra(idBase);
     }
 
     function removerDoCarrinho(id) {
@@ -1843,7 +2024,19 @@
             '</div>' +
           '</div></div>';
       }).join('');
-      var total = carrinho.reduce(function(a, i) { return a + (i.preco * i.quantidade); }, 0);
+      var subtotal = carrinho.reduce(function(a, i) { return a + (i.preco * i.quantidade); }, 0);
+      var desconto  = typeof calcularDesconto === 'function' ? calcularDesconto(subtotal) : 0;
+      var total     = subtotal - desconto;
+      var descontoRow = document.getElementById('cartDescontoRow');
+      if (descontoRow) {
+        if (desconto > 0) {
+          descontoRow.style.display = 'flex';
+          document.getElementById('cupomNome').textContent = window._cupomAtivo ? '(' + window._cupomAtivo.codigo + ')' : '';
+          document.getElementById('cartDesconto').textContent = '- R$ ' + desconto.toFixed(2).replace('.',',');
+        } else {
+          descontoRow.style.display = 'none';
+        }
+      }
       var el = document.getElementById('cartTotal');
       if (el) el.textContent = 'R$ ' + total.toFixed(2).replace('.', ',');
     }
@@ -1851,37 +2044,57 @@
     atualizarBadge();
     renderCarrinho();
 
+    // ── Estado do cupom ───────────────────────────────
+    window._cupomAtivo = null; // { id, codigo, tipo, valor }
+
+    window.aplicarCupom = async function() {
+      const codigo = document.getElementById('cupomInput').value.trim();
+      const msg    = document.getElementById('cupomMsg');
+      if (!codigo) return;
+      msg.className = 'cart-coupon-msg';
+      msg.textContent = 'Verificando...'; msg.style.display = 'block';
+
+      const { validarCupom } = await import('./db-structure.js');
+      const resultado = await validarCupom(codigo);
+
+      if (!resultado.valido) {
+        msg.textContent = '❌ ' + resultado.erro;
+        msg.className = 'cart-coupon-msg err';
+        window._cupomAtivo = null;
+        renderCarrinho();
+        return;
+      }
+
+      window._cupomAtivo = resultado.cupom;
+      const c = resultado.cupom;
+      const desc = c.tipo === 'percentual' ? c.valor + '% off' : 'R$ ' + Number(c.valor).toFixed(2).replace('.',',') + ' off';
+      msg.textContent = '✅ Cupom ' + c.codigo + ' aplicado — ' + desc;
+      msg.className = 'cart-coupon-msg ok';
+      renderCarrinho();
+    };
+
+    function calcularDesconto(subtotal) {
+      const c = window._cupomAtivo;
+      if (!c) return 0;
+      if (c.tipo === 'percentual') return subtotal * (c.valor / 100);
+      if (c.tipo === 'fixo')       return Math.min(c.valor, subtotal);
+      return 0;
+    }
+
     async function finalizarCompra() {
       if (carrinho.length === 0) return;
       var user = window._currentUser;
       if (!user) {
-        alert('Faca login para finalizar a compra!');
-        window.location.href = '/login.html';
+        window.location.href = '/login.html?redirect=checkout';
         return;
       }
-      var btn = document.querySelector('.cart-checkout-btn');
-      btn.textContent = 'Processando...';
-      btn.disabled = true;
-      try {
-        var { criarPedido } = await import('./db-structure.js');
-        var itens = carrinho.map(function(i) {
-          return { produtoId: i.id, nome: i.nome, quantidade: i.quantidade, preco: i.preco };
-        });
-        await criarPedido(user.uid, itens, {});
-        carrinho = [];
-        localStorage.setItem('mtn-cart', '[]');
-        atualizarBadge();
-        renderCarrinho();
-        toggleCart();
-        alert('Pedido realizado com sucesso!');
-        if (typeof window.abrirPedidosModal === 'function') {
-          window.abrirPedidosModal();
-        }
-      } catch(e) {
-        alert('Erro ao criar pedido. Tente novamente.');
-        btn.textContent = 'Finalizar Compra';
-        btn.disabled = false;
+      // Salva cupom ativo no sessionStorage para o checkout.html ler
+      if (window._cupomAtivo) {
+        sessionStorage.setItem('mtn-cupom', JSON.stringify(window._cupomAtivo));
+      } else {
+        sessionStorage.removeItem('mtn-cupom');
       }
+      window.location.href = '/checkout.html';
     }
     window.finalizarCompra = finalizarCompra;
   </script>

@@ -1016,7 +1016,7 @@
 
 <!-- Firebase / auth / produto loader -->
 <script type="module">
-  import { getProdutoPorId, getProdutos } from './db-structure.js';
+  import { getProdutoPorId, getProdutos, registrarVisualizacao, registrarIntencaoCompra } from './db-structure.js';
   import { observarLogin, logout } from './auth.js';
 
   window.fazerLogout = logout;
@@ -1087,24 +1087,38 @@
     });
   }
 
-  // ── Renderiza tamanhos ─────────────────────────────────────────
-  function renderTamanhos(tamanhos) {
+  // ── Renderiza tamanhos com estoque ─────────────────────────────
+  function renderTamanhos(tamanhos, estoque) {
     const el = document.getElementById('sizesEl');
     el.innerHTML = '';
     if (!tamanhos || tamanhos.length === 0) {
       el.innerHTML = '<span style="color:var(--muted);font-size:13px">Tamanho único</span>';
       return;
     }
+    const temEstoque = estoque && Object.keys(estoque).length > 0;
     tamanhos.forEach(t => {
+      const qtd        = temEstoque ? (estoque[t] || 0) : null;
+      const semEstoque = qtd !== null && qtd === 0;
+      const estoqueB   = qtd !== null && qtd > 0 && qtd <= 3;
       const btn = document.createElement('button');
-      btn.className = 'size-btn'; btn.textContent = t;
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected');
-        window._tamanhoSel = t;
-        document.getElementById('sizeLabel').textContent = t;
-        document.getElementById('sizeError').classList.remove('show');
-      });
+      btn.className = 'size-btn' + (semEstoque ? ' unavailable' : '');
+      btn.disabled  = semEstoque;
+      btn.title     = semEstoque ? 'Sem estoque' : estoqueB ? `Últimas ${qtd} unidades` : '';
+      btn.innerHTML = t + (estoqueB
+        ? `<span style="display:block;font-size:9px;color:#e07d40;font-weight:700;margin-top:1px">${qtd} left</span>`
+        : semEstoque
+        ? `<span style="display:block;font-size:9px;color:var(--muted);font-weight:700;margin-top:1px">Esgotado</span>`
+        : '');
+      if (estoqueB || !semEstoque) btn.style.cssText += ';height:auto;min-height:48px;padding:8px 12px;';
+      if (!semEstoque) {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          window._tamanhoSel = t;
+          document.getElementById('sizeLabel').textContent = t;
+          document.getElementById('sizeError').classList.remove('show');
+        });
+      }
       el.appendChild(btn);
     });
   }
@@ -1157,10 +1171,13 @@
     }
 
     window._produtoAtual = p;
-    document.title = p.nome + ' — BeYou';
+    document.title = p.nome + ' — MTN Co.';
     document.getElementById('breadcrumb-nome').textContent = p.nome;
     document.getElementById('prodNome').textContent = p.nome;
     document.getElementById('prodCategoria').textContent = p.categoria || 'Produto';
+
+    // Registra visualização (fire & forget)
+    registrarVisualizacao(prodId);
 
     // Preço
     const preco = p.precoPromocional || p.preco;
@@ -1180,7 +1197,7 @@
     renderGaleria(p.imagens || []);
 
     // Tamanhos / cores
-    renderTamanhos(p.tamanhos || ['P','M','G','GG']);
+    renderTamanhos(p.tamanhos || ['P','M','G','GG'], p.estoque || {});
     renderCores(p.cores || []);
 
     // Detalhes tab
@@ -1219,6 +1236,9 @@
 
   carregarProduto();
   carregarRelacionados();
+
+  // Expõe tracking para scripts não-module
+  window.registrarIntencaoCompra = registrarIntencaoCompra;
 
   // ── Pedidos modal ──────────────────────────────────────────────
   document.getElementById('menu-pedidos-item').addEventListener('click', (e) => {
@@ -1338,10 +1358,17 @@
     }
     var qty = parseInt(document.getElementById('qtyInput').value) || 1;
     var preco = p.precoPromocional || p.preco;
-    var id = p.id + (tamanho ? '-' + tamanho : '') + (window._corSel ? '-' + window._corSel : '');
+    var id   = p.id + (tamanho ? '-' + tamanho : '') + (window._corSel ? '-' + window._corSel : '');
     var nome = p.nome + (tamanho ? ' · ' + tamanho : '') + (window._corSel ? ' · ' + window._corSel : '');
-    adicionarAoCarrinho({ id: id, nome: nome, preco: preco, imagem: (p.imagens && p.imagens[0]) || null, quantidade: qty });
+    adicionarAoCarrinho({
+      id: id, nome: nome, preco: preco,
+      imagem: (p.imagens && p.imagens[0]) || null,
+      quantidade: qty,
+      produtoId: p.id,
+      tamanho: tamanho
+    });
     showToast('✅ Adicionado ao carrinho!');
+    if (window.registrarIntencaoCompra) window.registrarIntencaoCompra(p.id);
   }
   window.adicionarAoCarrinhoProduto = adicionarAoCarrinhoProduto;
 

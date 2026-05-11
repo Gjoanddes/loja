@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<script>
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+</script>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout — MTN Co.</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root[data-theme="light"] {
+      --bg: #f2ede8; --bg2: #e8e2da; --surface: #faf8f5;
+      --border: #ccc5bb; --text: #1a1917; --muted: #6b6259;
+      --accent: #9c7248; --accent2: #8c6238;
+    }
+    :root[data-theme="dark"] {
+      --bg: #141210; --bg2: #1e1c19; --surface: #242220;
+      --border: #3a3733; --text: #f0ece6; --muted: #9c9488;
+      --accent: #9c7248; --accent2: #8c6238;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* NAV */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--bg); border-bottom: 1px solid var(--border);
+      padding: 0 40px; height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800;
+      text-decoration: none; color: var(--text);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .nav-steps {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 12px; font-weight: 600;
+    }
+    .step {
+      display: flex; align-items: center; gap: 6px;
+      color: var(--muted); text-transform: uppercase; letter-spacing: .06em;
+    }
+    .step.active { color: var(--accent); }
+    .step.done   { color: var(--text); }
+    .step-num {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--border); color: var(--muted);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700;
+    }
+    .step.active .step-num { background: var(--accent); color: white; }
+    .step.done   .step-num { background: var(--text);   color: var(--bg); }
+    .step-sep { width: 24px; height: 1px; background: var(--border); }
+    .theme-toggle {
+      background: var(--bg2); border: 1px solid var(--border);
+      width: 36px; height: 36px; border-radius: 8px;
+      cursor: pointer; color: var(--text); font-size: 16px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* LAYOUT */
+    .checkout-layout {
+      max-width: 1080px; margin: 0 auto;
+      padding: 40px 24px 80px;
+      display: grid; grid-template-columns: 1fr 380px; gap: 32px;
+      align-items: start;
+    }
+
+    /* STEPS */
+    .checkout-step { display: none; }
+    .checkout-step.active { display: block; }
+
+    /* PANELS */
+    .panel {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; overflow: hidden; margin-bottom: 16px;
+    }
+    .panel-header {
+      padding: 18px 22px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .panel-header h3 {
+      font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 800;
+      text-transform: uppercase; letter-spacing: .06em;
+    }
+    .panel-body { padding: 22px; }
+
+    /* FORM */
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+    .form-row.full { grid-template-columns: 1fr; }
+    .form-row.trio { grid-template-columns: 1fr 1fr 1fr; }
+    .fg { display: flex; flex-direction: column; gap: 5px; }
+    .fg label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; color: var(--muted); }
+    .fg input, .fg select {
+      background: var(--bg); border: 1px solid var(--border);
+      color: var(--text); padding: 11px 13px; border-radius: 8px;
+      font-size: 14px; font-family: inherit; outline: none;
+      transition: border-color 0.2s; width: 100%;
+    }
+    .fg input:focus, .fg select:focus { border-color: var(--accent); }
+    .fg input::placeholder { color: var(--muted); opacity: .6; }
+    .fg select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%23888' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 12px center;
+      padding-right: 32px;
+    }
+
+    /* ENDEREÇOS SALVOS */
+    .addr-option {
+      border: 1px solid var(--border); border-radius: 10px;
+      padding: 14px 16px; margin-bottom: 10px; cursor: pointer;
+      transition: border-color .2s; display: flex; gap: 12px; align-items: flex-start;
+    }
+    .addr-option:hover { border-color: var(--accent); }
+    .addr-option.selected { border-color: var(--accent); background: var(--bg2); }
+    .addr-option input[type="radio"] { margin-top: 3px; accent-color: var(--accent); flex-shrink: 0; }
+    .addr-label { font-size: 12px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 3px; }
+    .addr-line  { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+    /* FRETE */
+    .frete-option {
+      border: 1px solid var(--border); border-radius: 10px;
+      padding: 14px 16px; margin-bottom: 8px; cursor: pointer;
+      transition: border-color .2s; display: flex; align-items: center; gap: 12px;
+    }
+    .frete-option:hover { border-color: var(--accent); }
+    .frete-option.selected { border-color: var(--accent); background: var(--bg2); }
+    .frete-option input[type="radio"] { accent-color: var(--accent); flex-shrink: 0; }
+    .frete-info { flex: 1; }
+    .frete-nome { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+    .frete-prazo { font-size: 11px; color: var(--muted); }
+    .frete-preco { font-size: 14px; font-weight: 700; color: var(--accent); }
+
+    /* CUPOM */
+    .cupom-row { display: flex; gap: 8px; }
+    .cupom-input {
+      flex: 1; background: var(--bg); border: 1px solid var(--border);
+      color: var(--text); padding: 11px 13px; border-radius: 8px;
+      font-size: 13px; font-family: inherit; outline: none;
+      text-transform: uppercase; letter-spacing: .08em; transition: border-color .2s;
+    }
+    .cupom-input:focus { border-color: var(--accent); }
+    .cupom-input::placeholder { text-transform: none; letter-spacing: 0; color: var(--muted); opacity: .6; }
+    .cupom-btn {
+      padding: 11px 18px; background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--text); font-size: 12px; font-weight: 700;
+      cursor: pointer; transition: all .2s; font-family: 'Syne', sans-serif;
+    }
+    .cupom-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .cupom-msg { font-size: 12px; margin-top: 8px; padding: 8px 12px; border-radius: 7px; display: none; }
+    .cupom-msg.ok  { background: rgba(76,175,130,.15); color: #4caf82; display: block; }
+    .cupom-msg.err { background: rgba(224,82,82,.15); color: #e05252; display: block; }
+
+    /* RESUMO LATERAL */
+    .summary-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 22px;
+      position: sticky; top: 88px;
+    }
+    .summary-title {
+      font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 800;
+      text-transform: uppercase; letter-spacing: .06em;
+      margin-bottom: 18px; padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .summary-item {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 14px;
+    }
+    .summary-img {
+      width: 52px; height: 64px; border-radius: 7px;
+      background: var(--bg2); overflow: hidden; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-size: 20px;
+    }
+    .summary-img img { width: 100%; height: 100%; object-fit: cover; }
+    .summary-item-name { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 3px; }
+    .summary-item-qty  { font-size: 11px; color: var(--muted); }
+    .summary-item-price { margin-left: auto; font-size: 14px; font-weight: 700; color: var(--accent); flex-shrink: 0; }
+    .summary-divider { height: 1px; background: var(--border); margin: 14px 0; }
+    .summary-row {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 13px; margin-bottom: 8px;
+    }
+    .summary-row.total {
+      font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800;
+      margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border);
+    }
+    .summary-row.total span:last-child { color: var(--accent); }
+    .summary-row .green { color: #4caf82; font-weight: 700; }
+    .summary-row .muted { color: var(--muted); }
+
+    /* BOTÕES */
+    .btn {
+      width: 100%; padding: 14px; border-radius: 10px;
+      font-size: 15px; font-weight: 700; font-family: 'Syne', sans-serif;
+      cursor: pointer; transition: all .2s; border: none;
+      letter-spacing: .04em; margin-bottom: 10px;
+    }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-primary:hover { background: var(--accent2); transform: translateY(-1px); }
+    .btn-primary:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+    .btn-outline { background: transparent; color: var(--muted); border: 1px solid var(--border); font-size: 13px; }
+    .btn-outline:hover { border-color: var(--text); color: var(--text); }
+
+    /* FEEDBACK */
+    .fb { padding: 11px 14px; border-radius: 8px; font-size: 13px; font-weight: 500; margin-bottom: 14px; display: none; }
+    .fb.ok  { background: rgba(76,175,130,.15); color: #4caf82; border: 1px solid rgba(76,175,130,.25); display: block; }
+    .fb.err { background: rgba(224,82,82,.15);  color: #e05252; border: 1px solid rgba(224,82,82,.25);  display: block; }
+
+    /* CONFIRMAÇÃO */
+    .success-screen {
+      text-align: center; padding: 60px 24px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px;
+    }
+    .success-icon {
+      font-size: 64px; margin-bottom: 20px;
+      animation: pop .4s cubic-bezier(.34,1.56,.64,1);
+    }
+    @keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
+    .success-title {
+      font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .success-sub { font-size: 15px; color: var(--muted); margin-bottom: 32px; line-height: 1.6; }
+    .success-pedido {
+      display: inline-block; background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 10px; padding: 12px 24px; font-family: 'DM Mono', monospace;
+      font-size: 13px; font-weight: 600; letter-spacing: .08em; margin-bottom: 32px;
+      color: var(--accent);
+    }
+    .success-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .success-btn {
+      padding: 12px 28px; border-radius: 10px; font-size: 14px; font-weight: 700;
+      font-family: 'Syne', sans-serif; cursor: pointer; text-decoration: none;
+      transition: all .2s; letter-spacing: .04em;
+    }
+    .success-btn-primary { background: var(--accent); color: white; border: none; }
+    .success-btn-primary:hover { background: var(--accent2); }
+    .success-btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+    .success-btn-outline:hover { border-color: var(--text); }
+
+    /* CEP loading */
+    .cep-loading { font-size: 11px; color: var(--muted); margin-top: 4px; display: none; }
+    .cep-loading.show { display: block; }
+
+    /* Responsive */
+    @media (max-width: 860px) {
+      .checkout-layout { grid-template-columns: 1fr; }
+      .summary-card { position: static; order: -1; }
+      nav { padding: 0 20px; }
+      .nav-steps { display: none; }
+    }
+    @media (max-width: 500px) {
+      .form-row { grid-template-columns: 1fr; }
+      .form-row.trio { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/index.html" class="nav-logo">
+    <svg width="24" height="19" viewBox="0 0 38 30" fill="none">
+      <polyline points="1,29 13,4 19,14 25,4 37,29" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="miter"/>
+      <line x1="1" y1="29" x2="37" y2="29" stroke="currentColor" stroke-width="2.4"/>
+      <polygon points="13,4 10,10 13,16 16,10" fill="currentColor"/>
+      <polygon points="25,4 22,10 25,16 28,10" fill="currentColor"/>
+    </svg>
+    MTN
+  </a>
+  <div class="nav-steps">
+    <div class="step done" id="step-ind-1"><div class="step-num">✓</div> Carrinho</div>
+    <div class="step-sep"></div>
+    <div class="step active" id="step-ind-2"><div class="step-num">2</div> Entrega</div>
+    <div class="step-sep"></div>
+    <div class="step" id="step-ind-3"><div class="step-num">3</div> Revisão</div>
+    <div class="step-sep"></div>
+    <div class="step" id="step-ind-4"><div class="step-num">4</div> Confirmação</div>
+  </div>
+  <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+</nav>
+
+<div class="checkout-layout">
+  <div>
+
+    <!-- STEP 1: ENTREGA -->
+    <div class="checkout-step active" id="step-entrega">
+
+      <!-- Endereços salvos -->
+      <div class="panel" id="panelEndSalvos" style="display:none">
+        <div class="panel-header">
+          <h3>Endereços Salvos</h3>
+          <button onclick="mostrarNovoEnd()" style="background:none;border:none;color:var(--accent);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">+ Novo endereço</button>
+        </div>
+        <div class="panel-body" id="endSalvosLista"></div>
+      </div>
+
+      <!-- Novo endereço -->
+      <div class="panel" id="panelNovoEnd">
+        <div class="panel-header">
+          <h3>Endereço de Entrega</h3>
+          <button id="btnUsarSalvo" onclick="mostrarEndSalvos()" style="display:none;background:none;border:none;color:var(--accent);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">Usar endereço salvo</button>
+        </div>
+        <div class="panel-body">
+          <div id="fbEntrega" class="fb"></div>
+          <div class="form-row">
+            <div class="fg">
+              <label>CEP *</label>
+              <input type="text" id="end-cep" placeholder="00000-000" maxlength="9" oninput="formatarCep(this)" onblur="buscarCep()">
+              <span class="cep-loading" id="cepLoading">Buscando endereço...</span>
+            </div>
+            <div class="fg">
+              <label>Número *</label>
+              <input type="text" id="end-numero" placeholder="123">
+            </div>
+          </div>
+          <div class="form-row full">
+            <div class="fg">
+              <label>Rua / Logradouro *</label>
+              <input type="text" id="end-rua" placeholder="Rua, Avenida...">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="fg">
+              <label>Complemento</label>
+              <input type="text" id="end-complemento" placeholder="Apto, Bloco...">
+            </div>
+            <div class="fg">
+              <label>Bairro *</label>
+              <input type="text" id="end-bairro" placeholder="Bairro">
+            </div>
+          </div>
+          <div class="form-row trio">
+            <div class="fg" style="grid-column:span 2">
+              <label>Cidade *</label>
+              <input type="text" id="end-cidade" placeholder="Cidade">
+            </div>
+            <div class="fg">
+              <label>Estado *</label>
+              <select id="end-estado">
+                <option value="">UF</option>
+                <option>AC</option><option>AL</option><option>AP</option><option>AM</option>
+                <option>BA</option><option>CE</option><option>DF</option><option>ES</option>
+                <option>GO</option><option>MA</option><option>MT</option><option>MS</option>
+                <option>MG</option><option>PA</option><option>PB</option><option>PR</option>
+                <option>PE</option><option>PI</option><option>RJ</option><option>RN</option>
+                <option>RS</option><option>RO</option><option>RR</option><option>SC</option>
+                <option>SP</option><option>SE</option><option>TO</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row full">
+            <div class="fg">
+              <label>Nome do destinatário *</label>
+              <input type="text" id="end-nome" placeholder="Quem vai receber">
+            </div>
+          </div>
+          <div class="form-row full">
+            <div class="fg">
+              <label>Telefone *</label>
+              <input type="tel" id="end-telefone" placeholder="(11) 99999-9999" oninput="formatarTel(this)">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Frete -->
+      <div class="panel" id="panelFrete" style="display:none">
+        <div class="panel-header"><h3>Método de Entrega</h3></div>
+        <div class="panel-body">
+          <div class="frete-option selected" id="frete-pac" onclick="selecionarFrete('pac', this)">
+            <input type="radio" name="frete" value="pac" checked>
+            <div class="frete-info">
+              <div class="frete-nome">PAC — Correios</div>
+              <div class="frete-prazo">Entrega em 7–12 dias úteis</div>
+            </div>
+            <span class="frete-preco" id="preco-pac">R$ —</span>
+          </div>
+          <div class="frete-option" id="frete-sedex" onclick="selecionarFrete('sedex', this)">
+            <input type="radio" name="frete" value="sedex">
+            <div class="frete-info">
+              <div class="frete-nome">SEDEX — Correios</div>
+              <div class="frete-prazo">Entrega em 2–4 dias úteis</div>
+            </div>
+            <span class="frete-preco" id="preco-sedex">R$ —</span>
+          </div>
+          <div class="frete-option" id="frete-gratis" onclick="selecionarFrete('gratis', this)" style="display:none">
+            <input type="radio" name="frete" value="gratis">
+            <div class="frete-info">
+              <div class="frete-nome">🎉 Frete Grátis</div>
+              <div class="frete-prazo">Pedidos acima de R$ 299 — 7–12 dias úteis</div>
+            </div>
+            <span class="frete-preco" style="color:#4caf82">GRÁTIS</span>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" onclick="irParaRevisao()">Continuar para Revisão →</button>
+      <button class="btn btn-outline" onclick="window.location.href='/index.html'">← Voltar ao Carrinho</button>
+    </div>
+
+    <!-- STEP 2: REVISÃO -->
+    <div class="checkout-step" id="step-revisao">
+      <div class="panel">
+        <div class="panel-header">
+          <h3>Endereço de Entrega</h3>
+          <button onclick="voltarEntrega()" style="background:none;border:none;color:var(--accent);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">Alterar</button>
+        </div>
+        <div class="panel-body" id="resumoEndereco" style="font-size:14px;line-height:1.7;color:var(--muted)"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><h3>Itens do Pedido</h3></div>
+        <div class="panel-body" id="revisaoItens"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><h3>Cupom de Desconto</h3></div>
+        <div class="panel-body">
+          <div class="cupom-row">
+            <input class="cupom-input" type="text" id="cupomRevisao" placeholder="Código do cupom" maxlength="20" oninput="this.value=this.value.toUpperCase()">
+            <button class="cupom-btn" onclick="aplicarCupomCheckout()">Aplicar</button>
+          </div>
+          <div class="cupom-msg" id="cupomMsgRevisao"></div>
+        </div>
+      </div>
+
+      <div id="fbRevisao" class="fb"></div>
+      <button class="btn btn-primary" id="btnConfirmar" onclick="confirmarPedido()">Confirmar Pedido 🛒</button>
+      <button class="btn btn-outline" onclick="voltarEntrega()">← Voltar</button>
+    </div>
+
+    <!-- STEP 3: CONFIRMAÇÃO -->
+    <div class="checkout-step" id="step-confirmacao">
+      <div class="success-screen">
+        <div class="success-icon">🎉</div>
+        <div class="success-title">Pedido Confirmado!</div>
+        <div class="success-sub">Seu pedido foi recebido com sucesso.<br>Você pode acompanhar o status na sua conta.</div>
+        <div class="success-pedido" id="pedidoCodigo">#XXXXXXXX</div>
+        <div class="success-actions">
+          <a href="/index.html" class="success-btn success-btn-primary">Continuar Comprando</a>
+          <a href="/meus-pedidos.html" class="success-btn success-btn-outline">Ver Meus Pedidos</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RESUMO LATERAL -->
+  <aside>
+    <div class="summary-card">
+      <div class="summary-title">Resumo do Pedido</div>
+      <div id="summaryItens"></div>
+      <div class="summary-divider"></div>
+      <div class="summary-row"><span class="muted">Subtotal</span><span id="summarySubtotal">R$ —</span></div>
+      <div class="summary-row" id="summaryFreteRow" style="display:none"><span class="muted">Frete</span><span id="summaryFrete">—</span></div>
+      <div class="summary-row" id="summaryDescontoRow" style="display:none"><span class="muted">Desconto</span><span class="green" id="summaryDesconto">—</span></div>
+      <div class="summary-row total"><span>Total</span><span id="summaryTotal">R$ —</span></div>
+    </div>
+  </aside>
+</div>
+
+<script type="module">
+  import { observarLogin } from './auth.js';
+  import { criarPedido, validarCupom, usarCupom } from './db-structure.js';
+  import { db } from './firebase-config.js';
+  import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js';
+
+  // ── Auth ─────────────────────────────────────────
+  window._user = null;
+  window._userData = null;
+
+  observarLogin(async (usuario) => {
+    if (!usuario) { window.location.href = '/login.html?redirect=checkout'; return; }
+    window._user = usuario;
+    // Carrega dados do usuário (endereços salvos)
+    const snap = await getDoc(doc(db, 'usuarios', usuario.uid));
+    window._userData = snap.exists() ? snap.data() : {};
+    inicializar();
+  });
+
+  function inicializar() {
+    const carrinho = JSON.parse(localStorage.getItem('mtn-cart') || '[]');
+    if (!carrinho.length) { window.location.href = '/index.html'; return; }
+    window._carrinho = carrinho;
+    window._freteAtivo = 'pac';
+    window._cupomAtivo = null;
+
+    // Carrega cupom passado do carrinho (se houver)
+    const cupomSalvo = sessionStorage.getItem('mtn-cupom');
+    if (cupomSalvo) {
+      try {
+        window._cupomAtivo = JSON.parse(cupomSalvo);
+        sessionStorage.removeItem('mtn-cupom');
+      } catch(e) {}
+    }
+
+    renderSummary();
+    calcularFrete();
+    carregarEndSalvos();
+  }
+
+  // ── Resumo lateral ───────────────────────────────
+  function fmt(v) { return 'R$ ' + Number(v).toFixed(2).replace('.', ','); }
+
+  function renderSummary() {
+    const c = window._carrinho || [];
+    document.getElementById('summaryItens').innerHTML = c.map(item => `
+      <div class="summary-item">
+        <div class="summary-img">
+          ${item.imagem ? `<img src="${item.imagem}" alt="">` : '👕'}
+        </div>
+        <div style="flex:1;min-width:0">
+          <div class="summary-item-name">${item.nome}</div>
+          <div class="summary-item-qty">Qtd: ${item.quantidade}</div>
+        </div>
+        <span class="summary-item-price">${fmt(item.preco * item.quantidade)}</span>
+      </div>
+    `).join('');
+    atualizarTotais();
+  }
+
+  function atualizarTotais() {
+    const c        = window._carrinho || [];
+    const subtotal = c.reduce((a, i) => a + i.preco * i.quantidade, 0);
+    const frete    = window._freteValor || 0;
+    const desconto = calcDesconto(subtotal);
+    const total    = subtotal + frete - desconto;
+
+    document.getElementById('summarySubtotal').textContent = fmt(subtotal);
+
+    const freteRow = document.getElementById('summaryFreteRow');
+    const fretiEl  = document.getElementById('summaryFrete');
+    if (frete === 0 && subtotal >= 299) {
+      freteRow.style.display = 'flex'; fretiEl.textContent = 'GRÁTIS'; fretiEl.style.color = '#4caf82';
+    } else if (frete > 0) {
+      freteRow.style.display = 'flex'; fretiEl.textContent = fmt(frete); fretiEl.style.color = '';
+    } else {
+      freteRow.style.display = 'none';
+    }
+
+    const descRow = document.getElementById('summaryDescontoRow');
+    if (desconto > 0) {
+      descRow.style.display = 'flex';
+      document.getElementById('summaryDesconto').textContent = '- ' + fmt(desconto);
+    } else { descRow.style.display = 'none'; }
+
+    document.getElementById('summaryTotal').textContent = fmt(total);
+    window._totalFinal = total;
+  }
+
+  function calcDesconto(subtotal) {
+    const c = window._cupomAtivo;
+    if (!c) return 0;
+    if (c.tipo === 'percentual') return subtotal * (c.valor / 100);
+    if (c.tipo === 'fixo')       return Math.min(c.valor, subtotal);
+    return 0;
+  }
+
+  // ── Frete simulado ───────────────────────────────
+  function calcularFrete() {
+    const subtotal = (window._carrinho || []).reduce((a, i) => a + i.preco * i.quantidade, 0);
+    const gratuito = subtotal >= 299;
+
+    // Simula cálculo baseado no subtotal
+    const pac   = gratuito ? 0 : Math.max(12.90, subtotal * 0.05);
+    const sedex = gratuito ? 0 : Math.max(22.90, subtotal * 0.09);
+
+    document.getElementById('preco-pac').textContent   = gratuito ? 'GRÁTIS' : fmt(pac);
+    document.getElementById('preco-sedex').textContent = gratuito ? 'GRÁTIS' : fmt(sedex);
+
+    if (gratuito) {
+      document.getElementById('frete-gratis').style.display = 'flex';
+      selecionarFrete('gratis', document.getElementById('frete-gratis'));
+    }
+
+    window._fretePac   = gratuito ? 0 : pac;
+    window._freteSedex = gratuito ? 0 : sedex;
+    window._freteValor = window._fretePac;
+
+    document.getElementById('panelFrete').style.display = '';
+    atualizarTotais();
+  }
+
+  window.selecionarFrete = function(tipo, el) {
+    document.querySelectorAll('.frete-option').forEach(o => {
+      o.classList.remove('selected');
+      o.querySelector('input').checked = false;
+    });
+    el.classList.add('selected');
+    el.querySelector('input').checked = true;
+    window._freteAtivo = tipo;
+    window._freteValor = tipo === 'sedex' ? window._freteSedex : (tipo === 'gratis' ? 0 : window._fretePac);
+    atualizarTotais();
+  };
+
+  // ── Endereços salvos ─────────────────────────────
+  function carregarEndSalvos() {
+    const ends = window._userData?.enderecos || [];
+    if (!ends.length) return;
+
+    const lista = document.getElementById('endSalvosLista');
+    lista.innerHTML = ends.map((e, i) => `
+      <div class="addr-option ${i===0?'selected':''}" id="addr-opt-${i}" onclick="selecionarEnd(${i}, this)">
+        <input type="radio" name="endSalvo" value="${i}" ${i===0?'checked':''}>
+        <div>
+          <div class="addr-label">${e.label || 'Endereço '+(i+1)}</div>
+          <div class="addr-line">${e.rua}, ${e.numero}${e.complemento?', '+e.complemento:''}<br>${e.bairro} — ${e.cidade}/${e.estado} · CEP ${e.cep}</div>
+        </div>
+      </div>
+    `).join('');
+
+    document.getElementById('panelEndSalvos').style.display = '';
+    document.getElementById('panelNovoEnd').style.display = 'none';
+    document.getElementById('btnUsarSalvo').style.display = '';
+
+    // Pre-seleciona o primeiro
+    window._endSelecionado = ends[0];
+  }
+
+  window.selecionarEnd = function(i, el) {
+    document.querySelectorAll('.addr-option').forEach(o => {
+      o.classList.remove('selected');
+      o.querySelector('input').checked = false;
+    });
+    el.classList.add('selected');
+    el.querySelector('input').checked = true;
+    window._endSelecionado = (window._userData?.enderecos || [])[i];
+  };
+
+  window.mostrarNovoEnd = function() {
+    document.getElementById('panelEndSalvos').style.display = 'none';
+    document.getElementById('panelNovoEnd').style.display = '';
+    window._endSelecionado = null;
+  };
+  window.mostrarEndSalvos = function() {
+    document.getElementById('panelEndSalvos').style.display = '';
+    document.getElementById('panelNovoEnd').style.display = 'none';
+  };
+
+  // ── CEP ──────────────────────────────────────────
+  window.buscarCep = async function() {
+    const cep = document.getElementById('end-cep').value.replace(/\D/g,'');
+    if (cep.length !== 8) return;
+    const loading = document.getElementById('cepLoading');
+    loading.classList.add('show');
+    try {
+      const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+      const d   = await res.json();
+      if (d.erro) return;
+      document.getElementById('end-rua').value    = d.logradouro || '';
+      document.getElementById('end-bairro').value = d.bairro     || '';
+      document.getElementById('end-cidade').value = d.localidade || '';
+      document.getElementById('end-estado').value = d.uf         || '';
+      document.getElementById('end-numero').focus();
+    } catch(e) {}
+    finally { loading.classList.remove('show'); }
+  };
+
+  // ── Ir para revisão ──────────────────────────────
+  window.irParaRevisao = function() {
+    const fb = document.getElementById('fbEntrega');
+    fb.className = 'fb';
+
+    let endereco;
+    if (window._endSelecionado) {
+      endereco = window._endSelecionado;
+    } else {
+      const rua   = document.getElementById('end-rua').value.trim();
+      const num   = document.getElementById('end-numero').value.trim();
+      const bairro= document.getElementById('end-bairro').value.trim();
+      const cidade= document.getElementById('end-cidade').value.trim();
+      const estado= document.getElementById('end-estado').value;
+      const nome  = document.getElementById('end-nome').value.trim();
+      const tel   = document.getElementById('end-telefone').value.trim();
+      if (!rua || !num || !bairro || !cidade || !estado || !nome || !tel) {
+        fb.textContent = '⚠️ Preencha todos os campos obrigatórios.';
+        fb.className = 'fb err';
+        document.getElementById('panelNovoEnd').scrollIntoView({behavior:'smooth'});
+        return;
+      }
+      endereco = {
+        cep:    document.getElementById('end-cep').value,
+        rua, numero: num, complemento: document.getElementById('end-complemento').value.trim(),
+        bairro, cidade, estado, nome, telefone: tel
+      };
+    }
+
+    window._enderecoCheckout = endereco;
+
+    // Preenche resumo
+    document.getElementById('resumoEndereco').innerHTML =
+      `<strong>${endereco.nome || ''}</strong>${endereco.nome?'<br>':''}
+       ${endereco.rua}, ${endereco.numero}${endereco.complemento?', '+endereco.complemento:''}<br>
+       ${endereco.bairro} — ${endereco.cidade}/${endereco.estado}<br>
+       CEP ${endereco.cep}${endereco.telefone?' · '+endereco.telefone:''}`;
+
+    // Preenche itens revisão
+    const c = window._carrinho;
+    document.getElementById('revisaoItens').innerHTML = c.map(item => `
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
+        <div style="width:44px;height:54px;border-radius:6px;background:var(--bg2);overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px">
+          ${item.imagem ? `<img src="${item.imagem}" style="width:100%;height:100%;object-fit:cover">` : '👕'}
+        </div>
+        <div style="flex:1"><div style="font-size:13px;font-weight:600">${item.nome}</div><div style="font-size:11px;color:var(--muted)">Qtd: ${item.quantidade}</div></div>
+        <span style="font-size:14px;font-weight:700;color:var(--accent)">${fmt(item.preco*item.quantidade)}</span>
+      </div>
+    `).join('') + `<div style="text-align:right;margin-top:12px;font-size:12px;color:var(--muted)">Frete: <strong>${window._freteValor === 0 ? 'GRÁTIS' : fmt(window._freteValor)}</strong></div>`;
+
+    // Vai para step revisão
+    setStep(2);
+  };
+
+  window.voltarEntrega = function() { setStep(1); };
+
+  // ── Cupom no checkout ────────────────────────────
+  window.aplicarCupomCheckout = async function() {
+    const codigo = document.getElementById('cupomRevisao').value.trim();
+    const msg    = document.getElementById('cupomMsgRevisao');
+    if (!codigo) return;
+    msg.className = 'cupom-msg';
+    msg.textContent = 'Verificando...'; msg.style.display = 'block';
+    const resultado = await validarCupom(codigo);
+    if (!resultado.valido) {
+      msg.textContent = '❌ ' + resultado.erro; msg.className = 'cupom-msg err';
+      window._cupomAtivo = null; atualizarTotais(); return;
+    }
+    window._cupomAtivo = resultado.cupom;
+    const c = resultado.cupom;
+    const desc = c.tipo === 'percentual' ? c.valor + '% off' : fmt(c.valor) + ' off';
+    msg.textContent = '✅ ' + c.codigo + ' — ' + desc; msg.className = 'cupom-msg ok';
+    atualizarTotais();
+  };
+
+  // ── Confirmar pedido ─────────────────────────────
+  window.confirmarPedido = async function() {
+    const btn = document.getElementById('btnConfirmar');
+    const fb  = document.getElementById('fbRevisao');
+    btn.disabled = true; btn.textContent = 'Processando...';
+    fb.className = 'fb';
+    try {
+      const c        = window._carrinho;
+      const subtotal = c.reduce((a,i)=>a+i.preco*i.quantidade,0);
+      const desconto = calcDesconto(subtotal);
+      const total    = subtotal + (window._freteValor||0) - desconto;
+      const itens    = c.map(i => ({ produtoId:i.id, nome:i.nome, quantidade:i.quantidade, preco:i.preco }));
+      const cupomInfo= window._cupomAtivo ? { codigo: window._cupomAtivo.codigo, desconto } : null;
+      const endereco = {
+        ...window._enderecoCheckout,
+        frete: { tipo: window._freteAtivo, valor: window._freteValor }
+      };
+      const pedidoId = await criarPedido(window._user.uid, itens, endereco, total, cupomInfo);
+
+      if (window._cupomAtivo) {
+        await usarCupom(window._cupomAtivo.id);
+        window._cupomAtivo = null;
+      }
+
+      // Limpa carrinho
+      localStorage.setItem('mtn-cart', '[]');
+
+      // Mostra confirmação
+      document.getElementById('pedidoCodigo').textContent = '#' + pedidoId.slice(-8).toUpperCase();
+      setStep(3);
+    } catch(e) {
+      fb.textContent = '❌ Erro ao processar pedido: ' + (e.message||e);
+      fb.className = 'fb err';
+      btn.disabled = false; btn.textContent = 'Confirmar Pedido 🛒';
+    }
+  };
+
+  // ── Steps ────────────────────────────────────────
+  function setStep(n) {
+    document.querySelectorAll('.checkout-step').forEach(s => s.classList.remove('active'));
+    const steps = ['entrega', 'revisao', 'confirmacao'];
+    document.getElementById('step-' + steps[n-1]).classList.add('active');
+
+    const indicators = document.querySelectorAll('.step');
+    indicators.forEach((s, i) => {
+      s.classList.remove('active','done');
+      const num = s.querySelector('.step-num');
+      if (i+1 < n)  { s.classList.add('done');   num.textContent = '✓'; }
+      if (i+1 === n){ s.classList.add('active');  num.textContent = i+1; }
+      if (i+1 > n)  { num.textContent = i+1; }
+    });
+
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+</script>
+
+<script>
+  // Helpers não-module
+  window.formatarCep = function(el) {
+    let v = el.value.replace(/\D/g,'').slice(0,8);
+    if (v.length > 5) v = v.slice(0,5)+'-'+v.slice(5);
+    el.value = v;
+  };
+  window.formatarTel = function(el) {
+    let v = el.value.replace(/\D/g,'').slice(0,11);
+    if (v.length > 10) v = '('+v.slice(0,2)+') '+v.slice(2,7)+'-'+v.slice(7);
+    else if (v.length > 6) v = '('+v.slice(0,2)+') '+v.slice(2,6)+'-'+v.slice(6);
+    else if (v.length > 2) v = '('+v.slice(0,2)+') '+v.slice(2);
+    el.value = v;
+  };
+
+  function toggleTheme() {
+    const html = document.documentElement;
+    const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    document.querySelector('.theme-toggle').textContent = next === 'dark' ? '🌙' : '☀️';
+    localStorage.setItem('theme', next);
+  }
+  const saved = localStorage.getItem('theme') || 'light';
+  document.querySelector('.theme-toggle').textContent = saved === 'dark' ? '🌙' : '☀️';
+</script>
+
+</body>
+</html>

@@ -169,9 +169,51 @@
     .img-thumb .remove-img { position: absolute; top: 2px; right: 2px; background: rgba(224,82,82,0.85); color: white; width: 18px; height: 18px; border-radius: 50%; font-size: 11px; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; cursor: pointer; border: none; }
     .img-thumb:hover .remove-img { opacity: 1; }
 
+    /* Estoque por tamanho */
+    .estoque-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+    .estoque-item {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 8px; padding: 8px 10px; min-width: 60px;
+    }
+    .estoque-item label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+    .estoque-item input {
+      width: 52px; background: var(--bg); border: 1px solid var(--border);
+      color: var(--text); padding: 5px 8px; border-radius: 6px;
+      font-size: 13px; font-weight: 700; text-align: center;
+      font-family: 'DM Mono', monospace; outline: none;
+      transition: border-color .2s;
+    }
+    .estoque-item input:focus { border-color: var(--accent); }
+    .estoque-zero { border-color: var(--red) !important; }
+    .estoque-zero input { color: var(--red); }
+    .estoque-baixo { border-color: var(--orange) !important; }
+    .estoque-baixo input { color: var(--orange); }
+    .tam-grid { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 2px; }
+    .tam-btn {
+      min-width: 44px; height: 38px; padding: 0 10px;
+      background: var(--surface2); border: 1px solid var(--border);
+      color: var(--muted); border-radius: 7px; font-size: 12px; font-weight: 700;
+      cursor: pointer; transition: all 0.15s; font-family: inherit; letter-spacing: 0.04em;
+    }
+    .tam-btn:hover { border-color: var(--accent); color: var(--text); }
+    .tam-btn.sel { background: var(--accent); border-color: var(--accent); color: white; }
+
     /* Cores */
-    .cores-input { display: flex; flex-wrap: wrap; gap: 6px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 8px; cursor: text; }
+    .cores-paleta { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 8px; }
+    .cor-paleta-btn {
+      display: flex; align-items: center; gap: 6px;
+      padding: 5px 11px; border-radius: 6px;
+      background: var(--surface2); border: 1px solid var(--border);
+      font-size: 12px; font-weight: 500; color: var(--muted);
+      cursor: pointer; transition: all 0.15s; font-family: inherit;
+    }
+    .cor-paleta-btn:hover { border-color: var(--border2); color: var(--text); }
+    .cor-paleta-btn.sel { border-color: var(--accent); color: var(--text); background: var(--surface); }
+    .cor-dot { width: 12px; height: 12px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.15); flex-shrink: 0; }
+    .cores-input { display: flex; flex-wrap: wrap; gap: 6px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 8px; cursor: text; min-height: 40px; }
     .cor-tag { display: flex; align-items: center; gap: 5px; background: var(--bg2); border: 1px solid var(--border); border-radius: 5px; padding: 3px 8px; font-size: 12px; }
+    .cor-dot-sm { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
     .cor-tag button { background: none; border: none; cursor: pointer; color: var(--muted); font-size: 14px; line-height: 1; padding: 0; }
     .cor-tag button:hover { color: var(--red); }
     .cores-add-input { background: transparent; border: none; outline: none; font-size: 12px; color: var(--text); min-width: 80px; font-family: inherit; }
@@ -254,6 +296,12 @@
       <span class="icon">🛍️</span> Pedidos
       <span class="nav-badge" id="badge-pendentes" style="display:none"></span>
     </button>
+    <button class="nav-item" id="nav-cupons" onclick="showPage('cupons',this)">
+      <span class="icon">🏷️</span> Cupons
+    </button>
+    <button class="nav-item" id="nav-analytics" onclick="showPage('analytics',this)">
+      <span class="icon">📊</span> Analytics
+    </button>
     <div class="sidebar-section">Loja</div>
     <a href="/index.html" class="nav-item">
       <span class="icon">🏪</span> Ver Loja
@@ -308,7 +356,7 @@
       </div>
       <div class="table-wrap">
         <table>
-          <thead><tr><th style="width:56px">IMG</th><th>Produto</th><th>Categoria</th><th>Preço</th><th style="width:130px">Ações</th></tr></thead>
+          <thead><tr><th style="width:56px">IMG</th><th>Produto</th><th>Categoria</th><th>Preço</th><th>Estoque</th><th style="width:130px">Ações</th></tr></thead>
           <tbody id="tbody-produtos"><tr><td colspan="5"><div class="vazio">Carregando...</div></td></tr></tbody>
         </table>
       </div>
@@ -341,6 +389,95 @@
       <div id="lista-pedidos"><div class="vazio"><div class="vazio-icon">🛍️</div>Carregando pedidos...</div></div>
     </div>
 
+    <!-- PAGE: CUPONS -->
+    <div class="page" id="page-cupons">
+      <div class="toolbar">
+        <span class="toolbar-title">Cupons de Desconto</span>
+        <button class="btn btn-primary" onclick="abrirDrawerCupom()">+ Novo Cupom</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>Código</th><th>Tipo</th><th>Valor</th>
+            <th>Usos</th><th>Validade</th><th>Status</th><th style="width:100px">Ações</th>
+          </tr></thead>
+          <tbody id="tbody-cupons"><tr><td colspan="7"><div class="vazio">Carregando...</div></td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PAGE: ANALYTICS -->
+    <div class="page" id="page-analytics">
+      <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:28px">
+        <div class="stat-card accent"><div class="stat-label">Total de Visualizações</div><div class="stat-value" id="an-views" style="font-size:28px;letter-spacing:-1px">—</div><div class="stat-delta">em todos os produtos</div></div>
+        <div class="stat-card green"><div class="stat-label">Intenções de Compra</div><div class="stat-value" id="an-carts" style="font-size:28px;letter-spacing:-1px">—</div><div class="stat-delta">cliques em adicionar</div></div>
+        <div class="stat-card orange"><div class="stat-label">Taxa de Conversão</div><div class="stat-value" id="an-conv" style="font-size:28px;letter-spacing:-1px">—%</div><div class="stat-delta">carrinho ÷ views</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <div class="table-wrap">
+          <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em">👁 Mais Vistos</div>
+          <div id="an-views-list"><div class="vazio" style="padding:28px">Carregando...</div></div>
+        </div>
+        <div class="table-wrap">
+          <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em">🛒 Mais Procurados</div>
+          <div id="an-cart-list"><div class="vazio" style="padding:28px">Carregando...</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- DRAWER: Cupom -->
+<div class="drawer-overlay" id="drawerCupomOverlay" onclick="fecharDrawerCupom()">
+  <div class="drawer" onclick="event.stopPropagation()">
+    <div class="drawer-header">
+      <span class="drawer-title" id="drawerCupomTitle">Novo Cupom</span>
+      <button class="drawer-close" onclick="fecharDrawerCupom()">✕</button>
+    </div>
+    <div class="drawer-body">
+      <div id="fbCupom" class="fb"></div>
+      <input type="hidden" id="c-id">
+      <div class="form-row full">
+        <div class="fg">
+          <label>Código do Cupom *</label>
+          <input type="text" id="c-codigo" placeholder="Ex: MTN10" style="text-transform:uppercase;letter-spacing:.08em" oninput="this.value=this.value.toUpperCase()">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="fg">
+          <label>Tipo de Desconto *</label>
+          <select id="c-tipo">
+            <option value="percentual">Percentual (%)</option>
+            <option value="fixo">Valor fixo (R$)</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>Valor do Desconto *</label>
+          <input type="number" id="c-valor" placeholder="10" step="0.01" min="0">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="fg">
+          <label>Limite de Usos</label>
+          <input type="number" id="c-limite" placeholder="100" min="1">
+        </div>
+        <div class="fg">
+          <label>Validade</label>
+          <input type="date" id="c-validade">
+        </div>
+      </div>
+      <div class="form-row full">
+        <div class="fg fg-check">
+          <input type="checkbox" id="c-ativo" checked>
+          <label for="c-ativo">Cupom ativo</label>
+        </div>
+      </div>
+    </div>
+    <div class="drawer-footer">
+      <button class="btn btn-outline" onclick="fecharDrawerCupom()">Cancelar</button>
+      <button class="btn btn-primary" id="btnSalvarCupom" onclick="salvarCupom()">Salvar Cupom</button>
+    </div>
   </div>
 </div>
 
@@ -371,17 +508,59 @@
           <select id="p-subcategoria"><option value="">Selecione a categoria</option></select>
         </div>
       </div>
-      <div class="form-row full"><div class="fg"><label>Tamanhos (separados por vírgula)</label><input type="text" id="p-tamanhos" placeholder="PP, P, M, G, GG, XGG"></div></div>
+      <div class="form-row full">
+        <div class="fg">
+          <label>Tamanhos</label>
+          <div class="tam-grid" id="tamGrid">
+            <button type="button" class="tam-btn" data-tam="PP"   onclick="toggleTam(this)">PP</button>
+            <button type="button" class="tam-btn" data-tam="P"    onclick="toggleTam(this)">P</button>
+            <button type="button" class="tam-btn" data-tam="M"    onclick="toggleTam(this)">M</button>
+            <button type="button" class="tam-btn" data-tam="G"    onclick="toggleTam(this)">G</button>
+            <button type="button" class="tam-btn" data-tam="GG"   onclick="toggleTam(this)">GG</button>
+            <button type="button" class="tam-btn" data-tam="XGG"  onclick="toggleTam(this)">XGG</button>
+            <button type="button" class="tam-btn" data-tam="36"   onclick="toggleTam(this)">36</button>
+            <button type="button" class="tam-btn" data-tam="37"   onclick="toggleTam(this)">37</button>
+            <button type="button" class="tam-btn" data-tam="38"   onclick="toggleTam(this)">38</button>
+            <button type="button" class="tam-btn" data-tam="39"   onclick="toggleTam(this)">39</button>
+            <button type="button" class="tam-btn" data-tam="40"   onclick="toggleTam(this)">40</button>
+            <button type="button" class="tam-btn" data-tam="41"   onclick="toggleTam(this)">41</button>
+            <button type="button" class="tam-btn" data-tam="42"   onclick="toggleTam(this)">42</button>
+            <button type="button" class="tam-btn" data-tam="Único" onclick="toggleTam(this)">Único</button>
+          </div>
+        </div>
+      </div>
       <div class="form-row full" style="margin-bottom:8px">
         <div class="fg">
-          <label>Cores (pressione Enter para adicionar)</label>
+          <label>Cores</label>
+          <div class="cores-paleta" id="coresPaleta">
+            <button type="button" class="cor-paleta-btn" data-cor="Preto"   data-hex="#1a1a1a" onclick="toggleCorPaleta(this)"><span class="cor-dot" style="background:#1a1a1a"></span>Preto</button>
+            <button type="button" class="cor-paleta-btn" data-cor="Branco"  data-hex="#f0ece6" onclick="toggleCorPaleta(this)"><span class="cor-dot" style="background:#f0ece6;border-color:#555"></span>Branco</button>
+            <button type="button" class="cor-paleta-btn" data-cor="Cinza"   data-hex="#888888" onclick="toggleCorPaleta(this)"><span class="cor-dot" style="background:#888888"></span>Cinza</button>
+            <button type="button" class="cor-paleta-btn" data-cor="Bege"    data-hex="#c8ad7f" onclick="toggleCorPaleta(this)"><span class="cor-dot" style="background:#c8ad7f"></span>Bege</button>
+            <button type="button" class="cor-paleta-btn" data-cor="Marrom"  data-hex="#8b5a2b" onclick="toggleCorPaleta(this)"><span class="cor-dot" style="background:#8b5a2b"></span>Marrom</button>
+            <button type="button" class="cor-paleta-btn" data-cor="Azul"    data-hex="#1e40af" onclick="toggleCorPaleta(this)"><span class="cor-dot" style="background:#1e40af"></span>Azul</button>
+            <button type="button" class="cor-paleta-btn" data-cor="Vermelho" data-hex="#dc2626" onclick="toggleCorPaleta(this)"><span class="cor-dot" style="background:#dc2626"></span>Vermelho</button>
+            <button type="button" class="cor-paleta-btn" data-cor="Verde"   data-hex="#16a34a" onclick="toggleCorPaleta(this)"><span class="cor-dot" style="background:#16a34a"></span>Verde</button>
+            <button type="button" class="cor-paleta-btn" data-cor="Laranja" data-hex="#ea580c" onclick="toggleCorPaleta(this)"><span class="cor-dot" style="background:#ea580c"></span>Laranja</button>
+            <button type="button" class="cor-paleta-btn" data-cor="Rosa"    data-hex="#ec4899" onclick="toggleCorPaleta(this)"><span class="cor-dot" style="background:#ec4899"></span>Rosa</button>
+            <button type="button" class="cor-paleta-btn" data-cor="Amarelo" data-hex="#eab308" onclick="toggleCorPaleta(this)"><span class="cor-dot" style="background:#eab308"></span>Amarelo</button>
+          </div>
           <div class="cores-input" id="coresContainer" onclick="document.getElementById('coresAddInput').focus()">
-            <input class="cores-add-input" id="coresAddInput" placeholder="Preto, Branco..." onkeydown="adicionarCor(event)">
+            <input class="cores-add-input" id="coresAddInput" placeholder="Outra cor..." onkeydown="adicionarCor(event)">
           </div>
         </div>
       </div>
       <div class="form-row full"><div class="fg"><label>Descrição</label><textarea id="p-descricao" placeholder="Descreva o produto..."></textarea></div></div>
       <div class="form-row full"><div class="fg"><label>Imagens do Produto</label><input type="file" id="p-imagens" accept="image/*" multiple onchange="previewImagens(event)"><div class="img-preview-grid" id="imgPreviewGrid"></div></div></div>
+
+      <div class="form-row full" id="estoqueBlock" style="display:none">
+        <div class="fg">
+          <label>Estoque por Tamanho</label>
+          <div class="estoque-grid" id="estoqueGrid"></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:6px">🔴 Sem estoque &nbsp;·&nbsp; 🟠 Estoque baixo (≤3)</div>
+        </div>
+      </div>
+
       <div class="form-row full">
         <div class="fg fg-check">
           <input type="checkbox" id="p-destaque">
@@ -420,7 +599,7 @@
 
 <script type="module">
   import { protegerPaginaAdmin, logout } from './auth.js';
-  import { getProdutos, adicionarProduto, atualizarProduto, removerProduto, getPedidos, atualizarPedido } from './db-structure.js';
+  import { getProdutos, adicionarProduto, atualizarProduto, removerProduto, getPedidos, atualizarPedido, getCupons, criarCupom, atualizarCupom } from './db-structure.js';
   import { auth } from './firebase-config.js';
   import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js';
 
@@ -494,6 +673,16 @@
         <td><div class="td-nome">${p.nome}${dest}</div><div class="td-meta">${p.subcategoria||'—'} · ${(p.tamanhos||[]).join(', ')||'Único'}</div></td>
         <td>${cat}</td>
         <td>${p.precoPromocional?`<div class="td-preco-old">R$ ${Number(p.preco).toFixed(2).replace('.',',')}</div>`:''}<div class="td-preco">R$ ${Number(preco).toFixed(2).replace('.',',')}</div></td>
+        <td>${(() => {
+          const est = p.estoque || {};
+          const tams = p.tamanhos || [];
+          if (!tams.length || !Object.keys(est).length) return '<span style="font-size:11px;color:var(--muted)">—</span>';
+          return tams.map(t => {
+            const q = est[t] ?? '—';
+            const cor = q === 0 ? 'var(--red)' : q <= 3 ? 'var(--orange)' : 'var(--green)';
+            return `<span style="font-size:11px;font-family:DM Mono,monospace;color:${cor};margin-right:6px">${t}:${q}</span>`;
+          }).join('');
+        })()}</td>
         <td><div class="td-actions">
           <button class="btn btn-outline btn-sm" onclick="editarProduto('${p.id}')">Editar</button>
           <button class="btn btn-danger btn-sm" onclick="confirmarRemocao('${p.id}','${p.nome.replace(/'/g,"\\'")}')">✕</button>
@@ -524,11 +713,21 @@
       document.getElementById('p-preco').value    = produto.preco || '';
       document.getElementById('p-preco-promo').value = produto.precoPromocional || '';
       document.getElementById('p-descricao').value   = produto.descricao || '';
-      document.getElementById('p-tamanhos').value    = (produto.tamanhos||[]).join(', ');
+      // Marca tamanhos e carrega estoque
+      window._estoqueAtual = produto.estoque || {};
+      document.querySelectorAll('.tam-btn').forEach(b => {
+        b.classList.toggle('sel', (produto.tamanhos||[]).includes(b.dataset.tam));
+      });
+      atualizarEstoqueGrid();
       document.getElementById('p-destaque').checked  = produto.destaque || false;
       document.getElementById('p-categoria').value   = produto.categoria || '';
       atualizarSubcategorias(produto.subcategoria);
-      (produto.cores||[]).forEach(adicionarCorTag);
+      (produto.cores||[]).forEach(cor => {
+        const paletaBtn = document.querySelector(`.cor-paleta-btn[data-cor="${cor}"]`);
+        const hex = paletaBtn ? paletaBtn.dataset.hex : null;
+        if (paletaBtn) paletaBtn.classList.add('sel');
+        adicionarCorTag(cor, hex);
+      });
       (produto.imagens||[]).forEach(url => {
         window._imagensBase64.push({url, existente:true});
         addThumb(url);
@@ -548,7 +747,12 @@
   };
 
   function limparForm() {
-    ['p-id','p-nome','p-preco','p-preco-promo','p-descricao','p-tamanhos'].forEach(id => { const el = document.getElementById(id); if(el) el.value=''; });
+    ['p-id','p-nome','p-preco','p-preco-promo','p-descricao'].forEach(id => { const el = document.getElementById(id); if(el) el.value=''; });
+    document.querySelectorAll('.tam-btn.sel').forEach(b => b.classList.remove('sel'));
+    document.querySelectorAll('.cor-paleta-btn.sel').forEach(b => b.classList.remove('sel'));
+    document.getElementById('estoqueBlock').style.display = 'none';
+    document.getElementById('estoqueGrid').innerHTML = '';
+    window._estoqueAtual = {};
     document.getElementById('p-destaque').checked = false;
     document.getElementById('p-categoria').value  = '';
     document.getElementById('p-subcategoria').innerHTML = '<option value="">Selecione a categoria</option>';
@@ -566,11 +770,77 @@
       : '<option value="">Selecione a categoria</option>';
   };
 
+  // ── Tamanhos toggle ──────────────────────────────────────
+  window.toggleTam = function(btn) {
+    btn.classList.toggle('sel');
+    atualizarEstoqueGrid();
+  };
+
+  function atualizarEstoqueGrid() {
+    const selecionados = Array.from(document.querySelectorAll('.tam-btn.sel')).map(b => b.dataset.tam);
+    const block = document.getElementById('estoqueBlock');
+    const grid  = document.getElementById('estoqueGrid');
+
+    if (!selecionados.length) { block.style.display = 'none'; return; }
+    block.style.display = '';
+
+    // Preserva valores já digitados
+    const valoresAtuais = {};
+    document.querySelectorAll('.estoque-item input').forEach(inp => {
+      valoresAtuais[inp.dataset.tam] = inp.value;
+    });
+
+    grid.innerHTML = selecionados.map(tam => {
+      const val = valoresAtuais[tam] || window._estoqueAtual?.[tam] || 0;
+      const cls = val == 0 ? 'estoque-zero' : val <= 3 ? 'estoque-baixo' : '';
+      return `<div class="estoque-item ${cls}" id="est-item-${tam}">
+        <label>${tam}</label>
+        <input type="number" min="0" data-tam="${tam}" value="${val}"
+          oninput="onEstoqueChange(this)">
+      </div>`;
+    }).join('');
+  }
+
+  window.onEstoqueChange = function(inp) {
+    const val = parseInt(inp.value) || 0;
+    const item = inp.parentElement;
+    item.className = 'estoque-item ' + (val === 0 ? 'estoque-zero' : val <= 3 ? 'estoque-baixo' : '');
+  };
+
+  function getEstoqueForm() {
+    const obj = {};
+    document.querySelectorAll('.estoque-item input').forEach(inp => {
+      obj[inp.dataset.tam] = parseInt(inp.value) || 0;
+    });
+    return obj;
+  }
+
+  function getTamanhosSelecionados() {
+    return Array.from(document.querySelectorAll('.tam-btn.sel')).map(b => b.dataset.tam);
+  }
+
+  // ── Cores paleta ──────────────────────────────────────────
+  window.toggleCorPaleta = function(btn) {
+    const cor = btn.dataset.cor;
+    const hex = btn.dataset.hex;
+    if (btn.classList.contains('sel')) {
+      btn.classList.remove('sel');
+      window._coresAtuais = window._coresAtuais.filter(c => c !== cor);
+      // Remove tag
+      document.querySelectorAll('.cor-tag').forEach(t => {
+        if (t.dataset.cor === cor) t.remove();
+      });
+    } else {
+      btn.classList.add('sel');
+      adicionarCorTag(cor, hex);
+    }
+  };
+
   window.adicionarCor = function(e) {
     if (e.key !== 'Enter' && e.key !== ',') return;
     e.preventDefault();
     const val = e.target.value.trim().replace(/,/g,'');
-    if (val && !window._coresAtuais.includes(val)) adicionarCorTag(val);
+    if (val && !window._coresAtuais.includes(val)) adicionarCorTag(val, null);
     e.target.value = '';
   };
   function adicionarCorTag(cor) {
@@ -649,7 +919,8 @@
         precoPromocional: parseFloat(document.getElementById('p-preco-promo').value) || null,
         categoria,
         subcategoria: document.getElementById('p-subcategoria').value,
-        tamanhos:  document.getElementById('p-tamanhos').value.split(',').map(s=>s.trim()).filter(Boolean),
+        tamanhos:  getTamanhosSelecionados(),
+        estoque:   getEstoqueForm(),
         cores:     window._coresAtuais,
         descricao: document.getElementById('p-descricao').value.trim(),
         destaque:  document.getElementById('p-destaque').checked,
@@ -761,9 +1032,152 @@
     document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
     document.getElementById('page-'+id).classList.add('active');
     btn.classList.add('active');
-    document.getElementById('topbar-title').textContent = id==='produtos' ? 'Produtos' : 'Pedidos';
-    if (id==='pedidos') carregarPedidos();
+    const titles = { produtos:'Produtos', pedidos:'Pedidos', cupons:'Cupons', analytics:'Analytics' };
+    document.getElementById('topbar-title').textContent = titles[id] || id;
+    if (id==='pedidos')   carregarPedidos();
+    if (id==='analytics') carregarAnalytics();
+    if (id==='cupons')    carregarCupons();
   };
+
+  // ── Cupons ────────────────────────────────────────
+  window._cupons = [];
+
+  async function carregarCupons() {
+    window._cupons = await getCupons();
+    renderCupons();
+  }
+
+  function renderCupons() {
+    const tbody = document.getElementById('tbody-cupons');
+    if (!window._cupons.length) {
+      tbody.innerHTML = '<tr><td colspan="7"><div class="vazio"><div class="vazio-icon">🏷️</div>Nenhum cupom cadastrado.</div></td></tr>';
+      return;
+    }
+    tbody.innerHTML = window._cupons.map(c => {
+      const validade = c.validade?.toDate
+        ? c.validade.toDate().toLocaleDateString('pt-BR')
+        : c.validade || '—';
+      const tipoLabel = c.tipo === 'percentual' ? c.valor + '%' : 'R$ ' + Number(c.valor).toFixed(2).replace('.',',');
+      const usosPct   = c.limite ? Math.round((c.usos/c.limite)*100) : 0;
+      return `<tr>
+        <td><span style="font-family:'DM Mono',monospace;font-size:13px;font-weight:700;letter-spacing:.06em;color:var(--accent2)">${c.codigo}</span></td>
+        <td><span style="font-size:12px;color:var(--muted)">${c.tipo === 'percentual' ? 'Percentual' : 'Fixo'}</span></td>
+        <td><span style="font-family:'DM Mono',monospace;font-weight:700;color:var(--green)">${tipoLabel}</span></td>
+        <td>
+          <div style="font-size:12px">${c.usos||0} / ${c.limite||'∞'}</div>
+          ${c.limite ? `<div style="height:3px;background:var(--border);border-radius:2px;margin-top:4px;overflow:hidden"><div style="height:100%;width:${usosPct}%;background:var(--accent);border-radius:2px"></div></div>` : ''}
+        </td>
+        <td><span style="font-size:12px;color:var(--muted)">${validade}</span></td>
+        <td>
+          <span style="font-size:10px;font-weight:700;padding:3px 10px;border-radius:4px;${c.ativo ? 'background:rgba(76,175,130,.2);color:var(--green)' : 'background:rgba(224,82,82,.15);color:var(--red)'}">
+            ${c.ativo ? 'ATIVO' : 'INATIVO'}
+          </span>
+        </td>
+        <td><div style="display:flex;gap:6px">
+          <button class="btn btn-outline btn-sm" onclick="editarCupom('${c.id}')">Editar</button>
+          <button class="btn btn-sm" style="${c.ativo ? 'background:rgba(224,82,82,.15);color:var(--red);border:1px solid var(--red)' : 'background:rgba(76,175,130,.15);color:var(--green);border:1px solid var(--green)'}"
+            onclick="toggleCupomAtivo('${c.id}',${!c.ativo})">${c.ativo ? 'Pausar' : 'Ativar'}</button>
+        </div></td>
+      </tr>`;
+    }).join('');
+  }
+
+  window.abrirDrawerCupom = function(cupom) {
+    document.getElementById('fbCupom').className = 'fb';
+    document.getElementById('c-id').value      = cupom?.id    || '';
+    document.getElementById('c-codigo').value  = cupom?.codigo || '';
+    document.getElementById('c-tipo').value    = cupom?.tipo   || 'percentual';
+    document.getElementById('c-valor').value   = cupom?.valor  || '';
+    document.getElementById('c-limite').value  = cupom?.limite || '';
+    document.getElementById('c-ativo').checked = cupom?.ativo !== false;
+    if (cupom?.validade?.toDate) {
+      const d = cupom.validade.toDate();
+      document.getElementById('c-validade').value = d.toISOString().split('T')[0];
+    } else { document.getElementById('c-validade').value = ''; }
+    document.getElementById('drawerCupomTitle').textContent = cupom ? 'Editar Cupom' : 'Novo Cupom';
+    document.getElementById('btnSalvarCupom').textContent   = cupom ? 'Salvar Alterações' : 'Salvar Cupom';
+    document.getElementById('drawerCupomOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  };
+  window.fecharDrawerCupom = () => {
+    document.getElementById('drawerCupomOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  };
+
+  window.editarCupom = id => {
+    const c = window._cupons.find(x => x.id === id);
+    if (c) abrirDrawerCupom(c);
+  };
+
+  window.toggleCupomAtivo = async (id, ativo) => {
+    await atualizarCupom(id, { ativo });
+    carregarCupons();
+    showToast(ativo ? '✅ Cupom ativado!' : '⏸ Cupom pausado.', 'info');
+  };
+
+  window.salvarCupom = async function() {
+    const btn    = document.getElementById('btnSalvarCupom');
+    const fb     = document.getElementById('fbCupom');
+    const codigo = document.getElementById('c-codigo').value.trim();
+    const tipo   = document.getElementById('c-tipo').value;
+    const valor  = parseFloat(document.getElementById('c-valor').value);
+    if (!codigo || !valor) {
+      fb.textContent = '⚠️ Preencha código e valor.'; fb.className = 'fb err'; return;
+    }
+    btn.disabled = true; btn.textContent = 'Salvando...';
+    const validadeVal = document.getElementById('c-validade').value;
+    const dados = {
+      codigo, tipo, valor, ativo: document.getElementById('c-ativo').checked,
+      limite: parseInt(document.getElementById('c-limite').value) || null,
+      validade: validadeVal ? new Date(validadeVal) : null,
+    };
+    const id = document.getElementById('c-id').value;
+    try {
+      if (id) { await atualizarCupom(id, dados); showToast('✅ Cupom atualizado!'); }
+      else     { await criarCupom(dados);          showToast('✅ Cupom criado!'); }
+      fecharDrawerCupom(); carregarCupons();
+    } catch(e) { fb.textContent = '❌ Erro: ' + e.message; fb.className = 'fb err'; }
+    btn.disabled = false;
+  };
+
+  // ── Analytics ─────────────────────────────────────
+  async function carregarAnalytics() {
+    const produtos = await getProdutos();
+
+    const totalViews = produtos.reduce((a, p) => a + (p.views || 0), 0);
+    const totalCarts = produtos.reduce((a, p) => a + (p.addToCart || 0), 0);
+    const conv = totalViews > 0 ? ((totalCarts / totalViews) * 100).toFixed(1) : '0.0';
+
+    document.getElementById('an-views').textContent = totalViews;
+    document.getElementById('an-carts').textContent = totalCarts;
+    document.getElementById('an-conv').textContent  = conv + '%';
+
+    function renderRanking(containerId, lista, campo, cor) {
+      const max = lista[0]?.[campo] || 1;
+      document.getElementById(containerId).innerHTML = lista.length
+        ? lista.map((p, i) => `
+          <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border)">
+            <span style="font-size:11px;font-weight:700;color:var(--muted);width:18px;text-align:right">${i+1}</span>
+            <div style="width:36px;height:44px;border-radius:6px;background:var(--surface2);overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px">
+              ${p.imagens?.[0] ? `<img src="${p.imagens[0]}" style="width:100%;height:100%;object-fit:cover">` : '👕'}
+            </div>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.nome}</div>
+              <div style="height:4px;background:var(--border);border-radius:2px;margin-top:6px;overflow:hidden">
+                <div style="height:100%;background:${cor};border-radius:2px;width:${Math.round((p[campo]||0)/max*100)}%;transition:width 0.5s"></div>
+              </div>
+            </div>
+            <span style="font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:${cor};flex-shrink:0">${p[campo]||0}</span>
+          </div>`).join('')
+        : '<div class="vazio" style="padding:28px">Nenhum dado ainda.</div>';
+    }
+
+    const porViews = [...produtos].sort((a,b) => (b.views||0)-(a.views||0)).slice(0,8);
+    const porCart  = [...produtos].sort((a,b) => (b.addToCart||0)-(a.addToCart||0)).slice(0,8);
+
+    renderRanking('an-views-list', porViews, 'views',     'var(--accent2)');
+    renderRanking('an-cart-list',  porCart,  'addToCart', 'var(--green)');
+  }
 
   // ── Toast ─────────────────────────────────────────
   let _tt;
