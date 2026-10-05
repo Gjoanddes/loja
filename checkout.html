@@ -25,8 +25,6 @@
 
     html { scroll-behavior: smooth; }
     body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
-
-    /* NAV */
     nav {
       position: sticky; top: 0; z-index: 100;
       background: var(--bg); border-bottom: 1px solid var(--border);
@@ -63,20 +61,14 @@
       cursor: pointer; color: var(--text); font-size: 16px;
       display: flex; align-items: center; justify-content: center;
     }
-
-    /* LAYOUT */
     .checkout-layout {
       max-width: 1080px; margin: 0 auto;
       padding: 40px 24px 80px;
       display: grid; grid-template-columns: 1fr 380px; gap: 32px;
       align-items: start;
     }
-
-    /* STEPS */
     .checkout-step { display: none; }
     .checkout-step.active { display: block; }
-
-    /* PANELS */
     .panel {
       background: var(--surface); border: 1px solid var(--border);
       border-radius: 14px; overflow: hidden; margin-bottom: 16px;
@@ -90,8 +82,6 @@
       text-transform: uppercase; letter-spacing: .06em;
     }
     .panel-body { padding: 22px; }
-
-    /* FORM */
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
     .form-row.full { grid-template-columns: 1fr; }
     .form-row.trio { grid-template-columns: 1fr 1fr 1fr; }
@@ -111,8 +101,6 @@
       background-repeat: no-repeat; background-position: right 12px center;
       padding-right: 32px;
     }
-
-    /* ENDEREÇOS SALVOS */
     .addr-option {
       border: 1px solid var(--border); border-radius: 10px;
       padding: 14px 16px; margin-bottom: 10px; cursor: pointer;
@@ -123,8 +111,6 @@
     .addr-option input[type="radio"] { margin-top: 3px; accent-color: var(--accent); flex-shrink: 0; }
     .addr-label { font-size: 12px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 3px; }
     .addr-line  { font-size: 13px; color: var(--muted); line-height: 1.5; }
-
-    /* FRETE */
     .frete-option {
       border: 1px solid var(--border); border-radius: 10px;
       padding: 14px 16px; margin-bottom: 8px; cursor: pointer;
@@ -137,8 +123,6 @@
     .frete-nome { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
     .frete-prazo { font-size: 11px; color: var(--muted); }
     .frete-preco { font-size: 14px; font-weight: 700; color: var(--accent); }
-
-    /* CUPOM */
     .cupom-row { display: flex; gap: 8px; }
     .cupom-input {
       flex: 1; background: var(--bg); border: 1px solid var(--border);
@@ -157,8 +141,6 @@
     .cupom-msg { font-size: 12px; margin-top: 8px; padding: 8px 12px; border-radius: 7px; display: none; }
     .cupom-msg.ok  { background: rgba(76,175,130,.15); color: #4caf82; display: block; }
     .cupom-msg.err { background: rgba(224,82,82,.15); color: #e05252; display: block; }
-
-    /* RESUMO LATERAL */
     .summary-card {
       background: var(--surface); border: 1px solid var(--border);
       border-radius: 14px; padding: 22px;
@@ -195,8 +177,6 @@
     .summary-row.total span:last-child { color: var(--accent); }
     .summary-row .green { color: #4caf82; font-weight: 700; }
     .summary-row .muted { color: var(--muted); }
-
-    /* BOTÕES */
     .btn {
       width: 100%; padding: 14px; border-radius: 10px;
       font-size: 15px; font-weight: 700; font-family: 'Syne', sans-serif;
@@ -208,13 +188,9 @@
     .btn-primary:disabled { opacity: .5; cursor: not-allowed; transform: none; }
     .btn-outline { background: transparent; color: var(--muted); border: 1px solid var(--border); font-size: 13px; }
     .btn-outline:hover { border-color: var(--text); color: var(--text); }
-
-    /* FEEDBACK */
     .fb { padding: 11px 14px; border-radius: 8px; font-size: 13px; font-weight: 500; margin-bottom: 14px; display: none; }
     .fb.ok  { background: rgba(76,175,130,.15); color: #4caf82; border: 1px solid rgba(76,175,130,.25); display: block; }
     .fb.err { background: rgba(224,82,82,.15);  color: #e05252; border: 1px solid rgba(224,82,82,.25);  display: block; }
-
-    /* CONFIRMAÇÃO */
     .success-screen {
       text-align: center; padding: 60px 24px;
       background: var(--surface); border: 1px solid var(--border);
@@ -246,12 +222,8 @@
     .success-btn-primary:hover { background: var(--accent2); }
     .success-btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
     .success-btn-outline:hover { border-color: var(--text); }
-
-    /* CEP loading */
     .cep-loading { font-size: 11px; color: var(--muted); margin-top: 4px; display: none; }
     .cep-loading.show { display: block; }
-
-    /* Responsive */
     @media (max-width: 860px) {
       .checkout-layout { grid-template-columns: 1fr; }
       .summary-card { position: static; order: -1; }
@@ -290,11 +262,7 @@
 
 <div class="checkout-layout">
   <div>
-
-    <!-- STEP 1: ENTREGA -->
     <div class="checkout-step active" id="step-entrega">
-
-      <!-- Endereços salvos -->
       <div class="panel" id="panelEndSalvos" style="display:none">
         <div class="panel-header">
           <h3>Endereços Salvos</h3>
@@ -302,8 +270,6 @@
         </div>
         <div class="panel-body" id="endSalvosLista"></div>
       </div>
-
-      <!-- Novo endereço -->
       <div class="panel" id="panelNovoEnd">
         <div class="panel-header">
           <h3>Endereço de Entrega</h3>
@@ -371,8 +337,6 @@
           </div>
         </div>
       </div>
-
-      <!-- Frete -->
       <div class="panel" id="panelFrete" style="display:none">
         <div class="panel-header"><h3>Método de Entrega</h3></div>
         <div class="panel-body">
@@ -402,12 +366,9 @@
           </div>
         </div>
       </div>
-
       <button class="btn btn-primary" onclick="irParaRevisao()">Continuar para Revisão →</button>
       <button class="btn btn-outline" onclick="window.location.href='/index.html'">← Voltar ao Carrinho</button>
     </div>
-
-    <!-- STEP 2: REVISÃO -->
     <div class="checkout-step" id="step-revisao">
       <div class="panel">
         <div class="panel-header">
@@ -416,12 +377,10 @@
         </div>
         <div class="panel-body" id="resumoEndereco" style="font-size:14px;line-height:1.7;color:var(--muted)"></div>
       </div>
-
       <div class="panel">
         <div class="panel-header"><h3>Itens do Pedido</h3></div>
         <div class="panel-body" id="revisaoItens"></div>
       </div>
-
       <div class="panel">
         <div class="panel-header"><h3>Cupom de Desconto</h3></div>
         <div class="panel-body">
@@ -432,13 +391,10 @@
           <div class="cupom-msg" id="cupomMsgRevisao"></div>
         </div>
       </div>
-
       <div id="fbRevisao" class="fb"></div>
       <button class="btn btn-primary" id="btnConfirmar" onclick="confirmarPedido()">Confirmar Pedido 🛒</button>
       <button class="btn btn-outline" onclick="voltarEntrega()">← Voltar</button>
     </div>
-
-    <!-- STEP 3: CONFIRMAÇÃO -->
     <div class="checkout-step" id="step-confirmacao">
       <div class="success-screen">
         <div class="success-icon">🎉</div>
@@ -451,10 +407,7 @@
         </div>
       </div>
     </div>
-
   </div>
-
-  <!-- RESUMO LATERAL -->
   <aside>
     <div class="summary-card">
       <div class="summary-title">Resumo do Pedido</div>
@@ -467,21 +420,18 @@
     </div>
   </aside>
 </div>
-
 <script type="module">
   import { observarLogin } from './auth.js';
   import { criarPedido, validarCupom, usarCupom } from './db-structure.js';
   import { db } from './firebase-config.js';
   import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js';
 
-  // ── Auth ─────────────────────────────────────────
   window._user = null;
   window._userData = null;
 
   observarLogin(async (usuario) => {
     if (!usuario) { window.location.href = '/login.html?redirect=checkout'; return; }
     window._user = usuario;
-    // Carrega dados do usuário (endereços salvos)
     const snap = await getDoc(doc(db, 'usuarios', usuario.uid));
     window._userData = snap.exists() ? snap.data() : {};
     inicializar();
@@ -493,8 +443,6 @@
     window._carrinho = carrinho;
     window._freteAtivo = 'pac';
     window._cupomAtivo = null;
-
-    // Carrega cupom passado do carrinho (se houver)
     const cupomSalvo = sessionStorage.getItem('mtn-cupom');
     if (cupomSalvo) {
       try {
@@ -508,7 +456,6 @@
     carregarEndSalvos();
   }
 
-  // ── Resumo lateral ───────────────────────────────
   function fmt(v) { return 'R$ ' + Number(v).toFixed(2).replace('.', ','); }
 
   function renderSummary() {
@@ -565,12 +512,9 @@
     return 0;
   }
 
-  // ── Frete simulado ───────────────────────────────
   function calcularFrete() {
     const subtotal = (window._carrinho || []).reduce((a, i) => a + i.preco * i.quantidade, 0);
     const gratuito = subtotal >= 299;
-
-    // Simula cálculo baseado no subtotal
     const pac   = gratuito ? 0 : Math.max(12.90, subtotal * 0.05);
     const sedex = gratuito ? 0 : Math.max(22.90, subtotal * 0.09);
 
@@ -602,7 +546,6 @@
     atualizarTotais();
   };
 
-  // ── Endereços salvos ─────────────────────────────
   function carregarEndSalvos() {
     const ends = window._userData?.enderecos || [];
     if (!ends.length) return;
@@ -621,8 +564,6 @@
     document.getElementById('panelEndSalvos').style.display = '';
     document.getElementById('panelNovoEnd').style.display = 'none';
     document.getElementById('btnUsarSalvo').style.display = '';
-
-    // Pre-seleciona o primeiro
     window._endSelecionado = ends[0];
   }
 
@@ -645,8 +586,6 @@
     document.getElementById('panelEndSalvos').style.display = '';
     document.getElementById('panelNovoEnd').style.display = 'none';
   };
-
-  // ── CEP ──────────────────────────────────────────
   window.buscarCep = async function() {
     const cep = document.getElementById('end-cep').value.replace(/\D/g,'');
     if (cep.length !== 8) return;
@@ -664,8 +603,6 @@
     } catch(e) {}
     finally { loading.classList.remove('show'); }
   };
-
-  // ── Ir para revisão ──────────────────────────────
   window.irParaRevisao = function() {
     const fb = document.getElementById('fbEntrega');
     fb.className = 'fb';
@@ -696,14 +633,11 @@
 
     window._enderecoCheckout = endereco;
 
-    // Preenche resumo
     document.getElementById('resumoEndereco').innerHTML =
       `<strong>${endereco.nome || ''}</strong>${endereco.nome?'<br>':''}
        ${endereco.rua}, ${endereco.numero}${endereco.complemento?', '+endereco.complemento:''}<br>
        ${endereco.bairro} — ${endereco.cidade}/${endereco.estado}<br>
        CEP ${endereco.cep}${endereco.telefone?' · '+endereco.telefone:''}`;
-
-    // Preenche itens revisão
     const c = window._carrinho;
     document.getElementById('revisaoItens').innerHTML = c.map(item => `
       <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
@@ -715,13 +649,10 @@
       </div>
     `).join('') + `<div style="text-align:right;margin-top:12px;font-size:12px;color:var(--muted)">Frete: <strong>${window._freteValor === 0 ? 'GRÁTIS' : fmt(window._freteValor)}</strong></div>`;
 
-    // Vai para step revisão
     setStep(2);
   };
 
   window.voltarEntrega = function() { setStep(1); };
-
-  // ── Cupom no checkout ────────────────────────────
   window.aplicarCupomCheckout = async function() {
     const codigo = document.getElementById('cupomRevisao').value.trim();
     const msg    = document.getElementById('cupomMsgRevisao');
@@ -739,8 +670,6 @@
     msg.textContent = '✅ ' + c.codigo + ' — ' + desc; msg.className = 'cupom-msg ok';
     atualizarTotais();
   };
-
-  // ── Confirmar pedido ─────────────────────────────
   window.confirmarPedido = async function() {
     const btn = document.getElementById('btnConfirmar');
     const fb  = document.getElementById('fbRevisao');
@@ -763,11 +692,7 @@
         await usarCupom(window._cupomAtivo.id);
         window._cupomAtivo = null;
       }
-
-      // Limpa carrinho
       localStorage.setItem('mtn-cart', '[]');
-
-      // Mostra confirmação
       document.getElementById('pedidoCodigo').textContent = '#' + pedidoId.slice(-8).toUpperCase();
       setStep(3);
     } catch(e) {
@@ -776,8 +701,6 @@
       btn.disabled = false; btn.textContent = 'Confirmar Pedido 🛒';
     }
   };
-
-  // ── Steps ────────────────────────────────────────
   function setStep(n) {
     document.querySelectorAll('.checkout-step').forEach(s => s.classList.remove('active'));
     const steps = ['entrega', 'revisao', 'confirmacao'];
@@ -797,7 +720,6 @@
 </script>
 
 <script>
-  // Helpers não-module
   window.formatarCep = function(el) {
     let v = el.value.replace(/\D/g,'').slice(0,8);
     if (v.length > 5) v = v.slice(0,5)+'-'+v.slice(5);
