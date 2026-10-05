@@ -28,7 +28,6 @@
     html { scroll-behavior: smooth; }
     body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; }
 
-    /* ── SIDEBAR ── */
     .sidebar {
       width: 220px; flex-shrink: 0; background: var(--bg2);
       border-right: 1px solid var(--border);
@@ -57,8 +56,6 @@
     .sidebar-footer { padding: 12px 8px; border-top: 1px solid var(--border); }
     .btn-logout { display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 12px; border-radius: 8px; background: none; border: none; cursor: pointer; font-size: 13px; font-weight: 500; color: var(--muted); transition: all 0.2s; font-family: inherit; }
     .btn-logout:hover { background: rgba(224,82,82,0.1); color: var(--red); }
-
-    /* ── MAIN ── */
     .main { margin-left: 220px; flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
     .topbar { height: 56px; background: var(--bg2); border-bottom: 1px solid var(--border); padding: 0 28px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 40; }
     .topbar-title { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; }
@@ -67,12 +64,8 @@
     .topbar-admin { display: flex; align-items: center; gap: 8px; padding: 6px 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; font-size: 12px; color: var(--muted); }
     .admin-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); flex-shrink: 0; box-shadow: 0 0 6px var(--green); }
     .content { padding: 28px; flex: 1; }
-
-    /* Pages */
     .page { display: none; }
     .page.active { display: block; }
-
-    /* ── STATS ── */
     .stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 28px; }
     .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; position: relative; overflow: hidden; transition: border-color 0.2s; }
     .stat-card:hover { border-color: var(--border2); }
@@ -89,8 +82,6 @@
     .stat-card.blue   .stat-value { color: var(--blue); }
     .stat-card.orange .stat-value { color: var(--orange); }
     .stat-delta { font-size: 11px; color: var(--muted); margin-top: 6px; }
-
-    /* ── TOOLBAR ── */
     .toolbar { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
     .toolbar-title { font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 800; margin-right: auto; }
     .search-wrapper { position: relative; }
@@ -98,8 +89,6 @@
     .search-input { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 9px 14px 9px 34px; border-radius: 8px; font-size: 13px; font-family: inherit; outline: none; width: 200px; transition: border-color 0.2s; }
     .search-input:focus { border-color: var(--accent); }
     .filter-select { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 9px 30px 9px 12px; border-radius: 8px; font-size: 13px; font-family: inherit; outline: none; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%23666' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; }
-
-    /* ── BOTÕES ── */
     .btn { padding: 9px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; font-family: 'Syne', sans-serif; cursor: pointer; transition: all 0.2s; border: none; display: inline-flex; align-items: center; gap: 6px; letter-spacing: 0.03em; }
     .btn-primary { background: var(--accent); color: white; }
     .btn-primary:hover { background: var(--accent2); }
@@ -109,8 +98,6 @@
     .btn-danger:hover { background: var(--red); color: white; }
     .btn-sm { padding: 6px 12px; font-size: 11px; }
     .btn:disabled { opacity: 0.45; cursor: not-allowed; }
-
-    /* ── TABLE ── */
     .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
     table { width: 100%; border-collapse: collapse; }
     thead tr { border-bottom: 1px solid var(--border); }
@@ -130,8 +117,6 @@
     .badge-roupas    { background: rgba(91,141,238,0.15); color: var(--blue); border: 1px solid rgba(91,141,238,0.2); }
     .badge-acessorios{ background: rgba(76,175,130,0.15); color: var(--green); border: 1px solid rgba(76,175,130,0.2); }
     .td-actions { display: flex; gap: 6px; }
-
-    /* ── DRAWER ── */
     .drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100; opacity: 0; visibility: hidden; transition: all 0.25s; }
     .drawer-overlay.open { opacity: 1; visibility: visible; }
     .drawer { position: fixed; top: 0; right: 0; width: 480px; max-width: 100vw; height: 100%; background: var(--surface); border-left: 1px solid var(--border); z-index: 101; display: flex; flex-direction: column; transform: translateX(100%); transition: transform 0.32s cubic-bezier(0.4,0,0.2,1); }
@@ -142,8 +127,6 @@
     .drawer-close:hover { background: var(--surface2); color: var(--text); }
     .drawer-body { flex: 1; overflow-y: auto; padding: 24px; }
     .drawer-footer { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; gap: 10px; justify-content: flex-end; }
-
-    /* Form */
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
     .form-row.full { grid-template-columns: 1fr; }
     .fg { display: flex; flex-direction: column; gap: 5px; }
@@ -156,20 +139,14 @@
     .fg-check { flex-direction: row !important; align-items: center; gap: 10px; cursor: pointer; }
     .fg-check label { text-transform: none; font-size: 13px; font-weight: 500; letter-spacing: 0; cursor: pointer; color: var(--text); }
     .fg-check input[type="checkbox"] { width: 16px; height: 16px; padding: 0; flex-shrink: 0; }
-
-    /* Feedback */
     .fb { padding: 10px 14px; border-radius: 8px; font-size: 12px; font-weight: 500; margin-bottom: 14px; display: none; }
     .fb.ok  { background: rgba(76,175,130,0.15); color: var(--green); border: 1px solid rgba(76,175,130,0.25); display: block; }
     .fb.err { background: rgba(224,82,82,0.15); color: var(--red); border: 1px solid rgba(224,82,82,0.25); display: block; }
-
-    /* Img preview */
     .img-preview-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
     .img-thumb { width: 72px; height: 72px; border-radius: 7px; background: var(--surface2); overflow: hidden; border: 1px solid var(--border); position: relative; display: flex; align-items: center; justify-content: center; font-size: 20px; }
     .img-thumb img { width: 100%; height: 100%; object-fit: cover; }
     .img-thumb .remove-img { position: absolute; top: 2px; right: 2px; background: rgba(224,82,82,0.85); color: white; width: 18px; height: 18px; border-radius: 50%; font-size: 11px; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; cursor: pointer; border: none; }
     .img-thumb:hover .remove-img { opacity: 1; }
-
-    /* Estoque por tamanho */
     .estoque-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
     .estoque-item {
       display: flex; flex-direction: column; align-items: center; gap: 4px;
@@ -198,8 +175,6 @@
     }
     .tam-btn:hover { border-color: var(--accent); color: var(--text); }
     .tam-btn.sel { background: var(--accent); border-color: var(--accent); color: white; }
-
-    /* Cores */
     .cores-paleta { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 8px; }
     .cor-paleta-btn {
       display: flex; align-items: center; gap: 6px;
@@ -217,8 +192,6 @@
     .cor-tag button { background: none; border: none; cursor: pointer; color: var(--muted); font-size: 14px; line-height: 1; padding: 0; }
     .cor-tag button:hover { color: var(--red); }
     .cores-add-input { background: transparent; border: none; outline: none; font-size: 12px; color: var(--text); min-width: 80px; font-family: inherit; }
-
-    /* ── PEDIDOS ── */
     .pedido-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px; margin-bottom: 10px; transition: border-color 0.2s; }
     .pedido-card:hover { border-color: var(--border2); }
     .pedido-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px; gap: 12px; flex-wrap: wrap; }
@@ -239,8 +212,6 @@
     .filter-pill { padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; cursor: pointer; border: 1px solid var(--border); background: transparent; color: var(--muted); transition: all 0.18s; font-family: inherit; text-transform: uppercase; letter-spacing: 0.06em; }
     .filter-pill:hover { border-color: var(--border2); color: var(--text); }
     .filter-pill.active { background: var(--accent); border-color: var(--accent); color: white; }
-
-    /* ── TOAST ── */
     .toast { position: fixed; bottom: 24px; right: 24px; padding: 13px 20px; border-radius: 10px; font-size: 13px; font-weight: 600; z-index: 200; transform: translateY(16px); opacity: 0; transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1); display: flex; align-items: center; gap: 8px; pointer-events: none; }
     .toast.show { transform: translateY(0); opacity: 1; pointer-events: auto; }
     .toast.ok   { background: var(--green); color: white; }
@@ -249,8 +220,6 @@
 
     .vazio { text-align: center; padding: 60px 20px; color: var(--muted); font-size: 13px; }
     .vazio-icon { font-size: 40px; margin-bottom: 12px; }
-
-    /* Confirm modal */
     .confirm-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 300; opacity: 0; visibility: hidden; transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
     .confirm-overlay.open { opacity: 1; visibility: visible; }
     .confirm-box { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 28px; max-width: 380px; width: calc(100% - 40px); }
@@ -305,7 +274,7 @@
     <div class="sidebar-section">Loja</div>
     <a href="/index.html" class="nav-item">
       <span class="icon">🏪</span> Ver Loja
-    </a>
+  </a>
   </nav>
   <div class="sidebar-footer">
     <button class="btn-logout" onclick="fazerLogout()"><span>🚪</span> Sair da conta</button>
@@ -329,8 +298,6 @@
   </header>
 
   <div class="content">
-
-    <!-- PAGE: PRODUTOS -->
     <div class="page active" id="page-produtos">
       <div class="stats-grid">
         <div class="stat-card accent"><div class="stat-label">Total Produtos</div><div class="stat-value" id="s-total">—</div><div class="stat-delta">ativos no catálogo</div></div>
@@ -361,8 +328,6 @@
         </table>
       </div>
     </div>
-
-    <!-- PAGE: PEDIDOS -->
     <div class="page" id="page-pedidos">
       <div class="stats-grid" style="grid-template-columns:repeat(5,1fr);margin-bottom:20px">
         <div class="stat-card"><div class="stat-label">Total</div><div class="stat-value" id="p-total" style="font-size:28px;letter-spacing:-0.5px">—</div></div>
@@ -388,13 +353,11 @@
       </div>
       <div id="lista-pedidos"><div class="vazio"><div class="vazio-icon">🛍️</div>Carregando pedidos...</div></div>
     </div>
-
-    <!-- PAGE: CUPONS -->
     <div class="page" id="page-cupons">
       <div class="toolbar">
         <span class="toolbar-title">Cupons de Desconto</span>
         <button class="btn btn-primary" onclick="abrirDrawerCupom()">+ Novo Cupom</button>
-      </div>
+    </div>
       <div class="table-wrap">
         <table>
           <thead><tr>
@@ -405,8 +368,6 @@
         </table>
       </div>
     </div>
-
-    <!-- PAGE: ANALYTICS -->
     <div class="page" id="page-analytics">
       <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:28px">
         <div class="stat-card accent"><div class="stat-label">Total de Visualizações</div><div class="stat-value" id="an-views" style="font-size:28px;letter-spacing:-1px">—</div><div class="stat-delta">em todos os produtos</div></div>
@@ -427,8 +388,6 @@
 
   </div>
 </div>
-
-<!-- DRAWER: Cupom -->
 <div class="drawer-overlay" id="drawerCupomOverlay" onclick="fecharDrawerCupom()">
   <div class="drawer" onclick="event.stopPropagation()">
     <div class="drawer-header">
@@ -481,7 +440,6 @@
   </div>
 </div>
 
-<!-- DRAWER: Produto -->
 <div class="drawer-overlay" id="drawerOverlay" onclick="fecharDrawer()">
   <div class="drawer" onclick="event.stopPropagation()">
     <div class="drawer-header">
@@ -552,7 +510,6 @@
       </div>
       <div class="form-row full"><div class="fg"><label>Descrição</label><textarea id="p-descricao" placeholder="Descreva o produto..."></textarea></div></div>
       <div class="form-row full"><div class="fg"><label>Imagens do Produto</label><input type="file" id="p-imagens" accept="image/*" multiple onchange="previewImagens(event)"><div class="img-preview-grid" id="imgPreviewGrid"></div></div></div>
-
       <div class="form-row full" id="estoqueBlock" style="display:none">
         <div class="fg">
           <label>Estoque por Tamanho</label>
@@ -560,7 +517,6 @@
           <div style="font-size:11px;color:var(--muted);margin-top:6px">🔴 Sem estoque &nbsp;·&nbsp; 🟠 Estoque baixo (≤3)</div>
         </div>
       </div>
-
       <div class="form-row full">
         <div class="fg fg-check">
           <input type="checkbox" id="p-destaque">
@@ -582,8 +538,6 @@
     </div>
   </div>
 </div>
-
-<!-- MODAL: Confirmar remoção -->
 <div class="confirm-overlay" id="confirmOverlay" onclick="fecharConfirm()">
   <div class="confirm-box" onclick="event.stopPropagation()">
     <h3>Remover produto?</h3>
@@ -603,7 +557,6 @@
   import { auth } from './firebase-config.js';
   import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js';
 
-  // ── Upload de imagem para Cloudinary ────────────────────────────────────
   const CLOUDINARY_CLOUD = 'dllxeuhjl';
   const CLOUDINARY_PRESET = 'mtn_produtos';
 
@@ -613,7 +566,6 @@
     formData.append('upload_preset', CLOUDINARY_PRESET);
     formData.append('folder', 'produtos');
 
-    // Atualiza barra de progresso
     const bar   = document.getElementById('uploadBar');
     const label = document.getElementById('uploadLabel');
     const prog  = document.getElementById('uploadProgress');
@@ -636,7 +588,6 @@
 
   onAuthStateChanged(auth, u => { if (u) document.getElementById('admin-email').textContent = u.email; });
 
-  // Relógio
   const tick = () => document.getElementById('relogio').textContent = new Date().toLocaleTimeString('pt-BR');
   tick(); setInterval(tick, 1000);
 
@@ -651,7 +602,6 @@
     acessorios: ['Bonés','Bolsas','Cintos','Meias','Óculos','Colares','Pulseiras','Carteiras'],
   };
 
-  // ── Produtos ─────────────────────────────────────
   async function carregarProdutos() {
     window._produtos = await getProdutos();
     renderProdutos(window._produtos);
@@ -702,7 +652,6 @@
     ));
   };
 
-  // ── Drawer ────────────────────────────────────────
   window.abrirDrawer = function(produto) {
     limparForm();
     if (produto) {
@@ -713,7 +662,6 @@
       document.getElementById('p-preco').value    = produto.preco || '';
       document.getElementById('p-preco-promo').value = produto.precoPromocional || '';
       document.getElementById('p-descricao').value   = produto.descricao || '';
-      // Marca tamanhos e carrega estoque
       window._estoqueAtual = produto.estoque || {};
       document.querySelectorAll('.tam-btn').forEach(b => {
         b.classList.toggle('sel', (produto.tamanhos||[]).includes(b.dataset.tam));
@@ -770,7 +718,6 @@
       : '<option value="">Selecione a categoria</option>';
   };
 
-  // ── Tamanhos toggle ──────────────────────────────────────
   window.toggleTam = function(btn) {
     btn.classList.toggle('sel');
     atualizarEstoqueGrid();
@@ -784,7 +731,6 @@
     if (!selecionados.length) { block.style.display = 'none'; return; }
     block.style.display = '';
 
-    // Preserva valores já digitados
     const valoresAtuais = {};
     document.querySelectorAll('.estoque-item input').forEach(inp => {
       valoresAtuais[inp.dataset.tam] = inp.value;
@@ -819,14 +765,12 @@
     return Array.from(document.querySelectorAll('.tam-btn.sel')).map(b => b.dataset.tam);
   }
 
-  // ── Cores paleta ──────────────────────────────────────────
   window.toggleCorPaleta = function(btn) {
     const cor = btn.dataset.cor;
     const hex = btn.dataset.hex;
     if (btn.classList.contains('sel')) {
       btn.classList.remove('sel');
       window._coresAtuais = window._coresAtuais.filter(c => c !== cor);
-      // Remove tag
       document.querySelectorAll('.cor-tag').forEach(t => {
         if (t.dataset.cor === cor) t.remove();
       });
@@ -890,15 +834,12 @@
     }
     btn.disabled = true;
 
-    // Novas imagens (não existentes) precisam ser uploadadas
     const novas = window._imagensBase64.filter(i => !i.existente);
     const existentes = window._imagensBase64.filter(i => i.existente).map(i => i.url);
 
     try {
-      // Precisa de um ID temporário para montar o path antes de criar o doc
       const idTemp = document.getElementById('p-id').value || ('tmp_' + Date.now());
 
-      // Upload de cada imagem nova para Cloudinary
       const urlsNovas = [];
       for (let i = 0; i < novas.length; i++) {
         const file = novas[i].file;
@@ -907,7 +848,6 @@
         urlsNovas.push(url);
       }
 
-      // Finaliza barra
       const bar   = document.getElementById('uploadBar');
       const label = document.getElementById('uploadLabel');
       if (bar) bar.style.width = '100%';
@@ -956,7 +896,6 @@
   };
   window.fecharConfirm = () => document.getElementById('confirmOverlay').classList.remove('open');
 
-  // ── Pedidos ───────────────────────────────────────
   window.carregarPedidos = async function() {
     const lista = document.getElementById('lista-pedidos');
     lista.innerHTML = '<div class="vazio"><div class="vazio-icon">🛍️</div>Carregando...</div>';
@@ -1026,7 +965,6 @@
     } catch(e) { showToast('❌ Erro.','err'); }
   };
 
-  // ── Navegação ─────────────────────────────────────
   window.showPage = (id, btn) => {
     document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
@@ -1039,7 +977,6 @@
     if (id==='cupons')    carregarCupons();
   };
 
-  // ── Cupons ────────────────────────────────────────
   window._cupons = [];
 
   async function carregarCupons() {
@@ -1140,7 +1077,6 @@
     btn.disabled = false;
   };
 
-  // ── Analytics ─────────────────────────────────────
   async function carregarAnalytics() {
     const produtos = await getProdutos();
 
@@ -1179,7 +1115,6 @@
     renderRanking('an-cart-list',  porCart,  'addToCart', 'var(--green)');
   }
 
-  // ── Toast ─────────────────────────────────────────
   let _tt;
   function showToast(msg, tipo='ok') {
     const el = document.getElementById('toast');
