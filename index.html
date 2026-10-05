@@ -54,7 +54,6 @@
       transition: background 0.3s, color 0.3s;
     }
 
-    /* ANNOUNCEMENT BAR */
     .announcement {
       background: #9c7248;
       color: white;
@@ -66,7 +65,6 @@
       text-transform: uppercase;
     }
 
-    /* NAVBAR */
     nav {
       position: sticky;
       top: 0;
@@ -183,7 +181,6 @@
       background: var(--border);
     }
 
-    /* ACCOUNT DROPDOWN */
     .account-dropdown-container {
       position: relative;
     }
@@ -281,7 +278,6 @@
       transition: all 0.3s;
     }
 
-    /* MOBILE MENU */
     .mobile-menu {
       display: none;
       position: fixed;
@@ -325,7 +321,7 @@
       color: var(--accent);
     }
 
-    /* HERO */
+ 
     .hero {
       height: 92vh;
       min-height: 560px;
@@ -339,7 +335,6 @@
       overflow: hidden;
     }
 
-    /* Silhueta da montanha no fundo */
     .hero::before {
       content: '';
       position: absolute;
@@ -349,7 +344,6 @@
       background-position: center bottom;
     }
 
-    /* Linha de grade diagonal sutil */
     .hero::after {
       content: '';
       position: absolute;
@@ -485,7 +479,6 @@
       color: white;
     }
 
-    /* Coordenadas no canto — detalhe de marca */
     .hero-coords {
       position: absolute;
       bottom: 28px;
@@ -498,7 +491,6 @@
       z-index: 1;
     }
 
-    /* VITRINE TOOLBAR */
     .vitrine-toolbar {
       display: flex; align-items: center; gap: 12px;
       margin-bottom: 28px; flex-wrap: wrap;
@@ -543,7 +535,6 @@
     .vitrine-empty-icon { font-size: 40px; margin-bottom: 12px; }
     .vitrine-empty h3 { font-size: 16px; color: var(--text); margin-bottom: 6px; font-family: 'Syne', sans-serif; }
 
-    /* Wishlist no card */
     .product-wish {
       position: absolute; top: 10px; right: 10px;
       background: rgba(0,0,0,0.4); border: none; border-radius: 50%;
@@ -599,7 +590,6 @@
       color: var(--muted);
     }
 
-    /* SECTION */
     .section {
       padding: 60px 40px;
     }
@@ -630,7 +620,6 @@
       color: var(--text);
     }
 
-    /* PRODUCTS GRID */
     .products-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -740,7 +729,6 @@
       color: white;
     }
 
-    /* EMPTY STATE */
     .empty-products {
       grid-column: 1 / -1;
       text-align: center;
@@ -754,7 +742,6 @@
       color: var(--text);
     }
 
-    /* CATEGORIES BANNER */
     .categories-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -815,7 +802,6 @@
       background: linear-gradient(135deg, #0f3460, #533483);
     }
 
-    /* FOOTER */
     footer {
       background: var(--surface);
       border-top: 1px solid var(--border);
@@ -910,7 +896,6 @@
       color: var(--muted);
     }
 
-    /* THEME TOGGLE */
     .theme-toggle {
       background: var(--border);
       border: none;
@@ -930,7 +915,6 @@
       background: #9c7248;
     }
 
-    /* RESPONSIVE */
     @media (max-width: 1024px) {
       .products-grid {
         grid-template-columns: repeat(3, 1fr);
@@ -994,7 +978,6 @@
       }
     }
 
-    /* CARRINHO LATERAL */
     .cart-overlay {
       position: fixed; inset: 0;
       background: rgba(0,0,0,0.5);
@@ -1100,7 +1083,6 @@
     }
     .cart-continue:hover { border-color: var(--text); color: var(--text); }
 
-    /* PAINEL MEUS PEDIDOS — sidebar direita igual ao carrinho */
     .pedidos-overlay {
       position: fixed; inset: 0;
       background: rgba(0,0,0,0.5);
@@ -1201,7 +1183,6 @@
     .pedidos-empty h3 { font-size: 16px; color: var(--text); margin-bottom: 6px; }
     .pedidos-empty p { font-size: 13px; }
 
-    /* ══ MODAL CONFIGURAÇÕES DE CONTA ══════════════════════════════ */
     .conta-overlay {
       position: fixed; inset: 0; background: rgba(0,0,0,0.5);
       z-index: 500; opacity: 0; visibility: hidden;
@@ -1229,7 +1210,7 @@
       border-radius: 8px; transition: background 0.2s;
     }
     .conta-modal-close:hover { background: var(--border); }
-    /* Tabs internas */
+
     .conta-tabs {
       display: flex; border-bottom: 1px solid var(--border);
       flex-shrink: 0; overflow-x: auto;
@@ -1249,11 +1230,11 @@
     .conta-tab.active { color: var(--text); }
     .conta-tab.active::after { transform: scaleX(1); }
     .conta-tab:hover { color: var(--text); }
-    /* Body scrollável */
+
     .conta-modal-body { flex: 1; overflow-y: auto; }
     .conta-section { display: none; padding: 24px; }
     .conta-section.active { display: block; }
-    /* Perfil */
+
     .conta-avatar-row {
       display: flex; align-items: center; gap: 16px;
       padding-bottom: 20px; margin-bottom: 20px;
@@ -1274,7 +1255,7 @@
     }
     .conta-avatar-info strong { font-size: 14px; display: block; margin-bottom: 2px; }
     .conta-avatar-info span { font-size: 12px; color: var(--muted); }
-    /* Form */
+
     .conta-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
     .conta-form-row.full { grid-template-columns: 1fr; }
     .conta-fg { display: flex; flex-direction: column; gap: 5px; }
@@ -1314,14 +1295,14 @@
       display: flex; gap: 10px; justify-content: flex-end;
       padding-top: 14px; border-top: 1px solid var(--border); margin-top: 8px;
     }
-    /* Feedback */
+
     .conta-feedback {
       padding: 10px 14px; border-radius: 8px; font-size: 12px;
       font-weight: 500; margin-bottom: 14px; display: none;
     }
     .conta-feedback.success { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; display: block; }
     .conta-feedback.error   { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; display: block; }
-    /* Endereços */
+
     .conta-address-card {
       background: var(--bg2); border: 1px solid var(--border);
       border-radius: 10px; padding: 14px; margin-bottom: 10px;
@@ -1332,7 +1313,7 @@
     .conta-address-default { font-size: 10px; background: var(--accent); color: white; padding: 2px 8px; border-radius: 20px; font-weight: 700; }
     .conta-address-line { font-size: 12px; color: var(--muted); line-height: 1.6; }
     .conta-address-actions { display: flex; gap: 6px; margin-top: 10px; }
-    /* Segurança */
+
     .conta-security-row {
       display: flex; align-items: center; justify-content: space-between;
       padding: 14px 0; border-bottom: 1px solid var(--border);
@@ -1343,11 +1324,11 @@
     .conta-status-dot { width: 7px; height: 7px; border-radius: 50%; }
     .conta-status-dot.ok   { background: #22c55e; }
     .conta-status-dot.warn { background: #f59e0b; }
-    /* Barra de força de senha */
+
     .conta-pw-bar { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; margin: 8px 0 4px; }
     .conta-pw-bar-fill { height: 100%; width: 0; border-radius: 2px; transition: all 0.3s; }
     .conta-pw-label { font-size: 10px; color: var(--muted); }
-    /* Notificações */
+
     .conta-notif-row {
       display: flex; align-items: center; justify-content: space-between;
       padding: 12px 0; border-bottom: 1px solid var(--border);
@@ -1367,7 +1348,7 @@
     }
     .conta-toggle input:checked + .conta-toggle-slider { background: var(--accent); }
     .conta-toggle input:checked + .conta-toggle-slider::before { transform: translateX(18px); }
-    /* Zona de perigo */
+
     .conta-danger-panel {
       border: 1px solid #e53e3e; border-radius: 10px; overflow: hidden; margin-top: 20px;
     }
@@ -1379,7 +1360,7 @@
     }
     [data-theme="dark"] .conta-danger-header { background: #2d1515; border-bottom-color: #6b2020; }
     .conta-danger-body { padding: 16px; }
-    /* Modal de confirmação dentro da conta */
+
     .conta-confirm-overlay {
       position: fixed; inset: 0; background: rgba(0,0,0,0.7);
       z-index: 601; opacity: 0; visibility: hidden; transition: all 0.2s;
@@ -1394,7 +1375,7 @@
     .conta-confirm-box h3 { font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 800; margin-bottom: 8px; }
     .conta-confirm-box p { font-size: 13px; color: var(--muted); margin-bottom: 16px; line-height: 1.5; }
     .conta-confirm-actions { display: flex; gap: 10px; justify-content: flex-end; }
-    /* Modal endereço dentro da conta */
+
     .conta-addr-overlay {
       position: fixed; inset: 0; background: rgba(0,0,0,0.7);
       z-index: 601; opacity: 0; visibility: hidden; transition: all 0.2s;
@@ -1412,19 +1393,14 @@
 
 <body>
 
-  <!-- ANNOUNCEMENT -->
   <div class="announcement">MTN Co. · Envios para todo o Brasil — Frete grátis acima de R$ 299</div>
 
-  <!-- NAVBAR -->
+
   <nav>
     <a href="/index.html" class="nav-logo"><svg width="38" height="30" viewBox="0 0 38 30" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;flex-shrink:0">
-  <!-- Montanha esquerda (maior) -->
   <polyline points="1,29 13,4 19,14 25,4 37,29" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="miter"/>
-  <!-- Base fechando -->
   <line x1="1" y1="29" x2="37" y2="29" stroke="currentColor" stroke-width="2.4"/>
-  <!-- Losango vale esquerdo -->
   <polygon points="13,4 10,10 13,16 16,10" fill="currentColor"/>
-  <!-- Losango vale direito -->
   <polygon points="25,4 22,10 25,16 28,10" fill="currentColor"/>
 </svg> MTN</a>
     <ul class="nav-links">
@@ -1470,7 +1446,6 @@
     </div>
   </nav>
 
-  <!-- MOBILE MENU -->
   <div class="mobile-menu" id="mobileMenu">
     <button class="mobile-menu-close" onclick="toggleMenu()">×</button>
     <a href="#" onclick="toggleMenu()">Shop</a>
@@ -1482,7 +1457,6 @@
     <a href="#" onclick="fazerLogout()" id="mobile-logout-item" style="display:none">Sair da Conta</a>
   </div>
 
-  <!-- HERO -->
   <section class="hero">
     <div class="hero-content">
       <span class="hero-tag">Nova Coleção 2026 · MTN Co.</span>
@@ -1495,7 +1469,6 @@
     </div>
   </section>
 
-  <!-- BENEFITS -->
   <div class="benefits">
     <div class="benefit">
       <span class="benefit-icon">🔒</span>
@@ -1527,7 +1500,6 @@
     </div>
   </div>
 
-  <!-- NOVIDADES -->
   <section class="section" id="novidades">
     <div class="vitrine-toolbar">
       <div class="vitrine-search-wrap">
@@ -1556,7 +1528,6 @@
     </div>
   </section>
 
-  <!-- CATEGORIAS -->
   <section class="section" id="categorias">
     <div class="section-header">
       <h2 class="section-title">Categorias</h2>
@@ -1577,7 +1548,6 @@
     </div>
   </section>
 
-  <!-- FOOTER -->
   <footer>
     <div class="footer-grid">
       <div>
@@ -1657,7 +1627,6 @@
 
     window.registrarIntencaoCompra = registrarIntencaoCompra;
 
-    // ── Vitrine com busca + filtro + ordenação ────────────────────────────
     window._todosProdutos = [];
     window._categoriaAtiva = '';
     window._wishlist = JSON.parse(localStorage.getItem('mtn-wishlist') || '[]');
@@ -1725,7 +1694,6 @@
         if (sort === 'maior') return pb - pa;
         if (sort === 'az')    return a.nome.localeCompare(b.nome);
         if (sort === 'za')    return b.nome.localeCompare(a.nome);
-        // destaque: destaques primeiro
         return (b.destaque ? 1 : 0) - (a.destaque ? 1 : 0);
       });
 
@@ -1775,16 +1743,13 @@
       document.getElementById('mobileMenu').classList.toggle('open');
     }
 
-    // Restore theme
     const saved = localStorage.getItem('theme') || 'dark';
     document.documentElement.setAttribute('data-theme', saved);
     document.querySelector('.theme-toggle').textContent = saved === 'dark' ? '🌙' : '☀️';
-    // Toggle Account Menu
     window.toggleAccountMenu = function () {
       document.getElementById('accountMenu').classList.toggle('show');
     };
 
-    // Fechar menu ao clicar fora
     document.addEventListener('click', function (event) {
       const container = document.querySelector('.account-dropdown-container');
       const menu = document.getElementById('accountMenu');
@@ -1794,8 +1759,6 @@
     });
   </script>
 
-
-  <!-- CARRINHO LATERAL -->
   <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
   <div class="cart-sidebar" id="cartSidebar">
     <div class="cart-header">
@@ -1822,7 +1785,6 @@
     </div>
   </div>
 
-  <!-- MODAL MEUS PEDIDOS -->
   <div class="pedidos-overlay" id="pedidosOverlay">
     <div class="pedidos-modal" id="pedidosModal">
       <div class="pedidos-modal-header">
@@ -1927,17 +1889,14 @@
       document.body.style.overflow = '';
     };
 
-    // Fechar clicando no overlay
     document.getElementById('pedidosOverlay').addEventListener('click', function (e) {
       if (e.target === this) window.fecharPedidosModal();
     });
 
-    // Fechar com ESC
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') window.fecharPedidosModal();
     });
 
-    // Conectar botão do dropdown
     document.addEventListener('DOMContentLoaded', function () {
       const btn = document.getElementById('menu-pedidos-item');
       if (btn) {
@@ -2044,8 +2003,7 @@
     atualizarBadge();
     renderCarrinho();
 
-    // ── Estado do cupom ───────────────────────────────
-    window._cupomAtivo = null; // { id, codigo, tipo, valor }
+    window._cupomAtivo = null;
 
     window.aplicarCupom = async function() {
       const codigo = document.getElementById('cupomInput').value.trim();
@@ -2088,7 +2046,6 @@
         window.location.href = '/login.html?redirect=checkout';
         return;
       }
-      // Salva cupom ativo no sessionStorage para o checkout.html ler
       if (window._cupomAtivo) {
         sessionStorage.setItem('mtn-cupom', JSON.stringify(window._cupomAtivo));
       } else {
@@ -2099,8 +2056,6 @@
     window.finalizarCompra = finalizarCompra;
   </script>
 
-
-  <!-- MODAL CONFIGURAÇÕES DE CONTA -->
   <div class="conta-overlay" id="contaOverlay">
     <div class="conta-modal">
       <div class="conta-modal-header">
@@ -2118,7 +2073,6 @@
       </div>
       <div class="conta-modal-body">
 
-        <!-- PERFIL -->
         <div class="conta-section active" id="conta-section-perfil">
           <div class="conta-avatar-row">
             <div class="conta-avatar" id="contaAvatar" onclick="document.getElementById('contaAvatarInput').click()">?
@@ -2159,7 +2113,6 @@
           </div>
         </div>
 
-        <!-- ENDEREÇOS -->
         <div class="conta-section" id="conta-section-enderecos">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
             <span style="font-size:13px;color:var(--muted)" id="contaEnderecoCount">Carregando...</span>
@@ -2168,7 +2121,6 @@
           <div id="contaEnderecosList"><div style="text-align:center;padding:32px;color:var(--muted);font-size:13px">Carregando...</div></div>
         </div>
 
-        <!-- SEGURANÇA -->
         <div class="conta-section" id="conta-section-seguranca">
           <div id="contaFeedbackSenha" class="conta-feedback"></div>
           <div style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px">Alterar Senha</div>
@@ -2212,7 +2164,6 @@
           </div>
         </div>
 
-        <!-- NOTIFICAÇÕES -->
         <div class="conta-section" id="conta-section-notificacoes">
           <div id="contaFeedbackNotif" class="conta-feedback"></div>
           <div style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px">E-mail</div>
@@ -2232,7 +2183,6 @@
     </div>
   </div>
 
-  <!-- MODAL endereço (dentro da conta) -->
   <div class="conta-addr-overlay" id="contaAddrOverlay" onclick="contaFecharModalEndereco()">
     <div class="conta-addr-box" onclick="event.stopPropagation()">
       <h3 id="contaAddrTitle">Novo Endereço</h3>
@@ -2271,7 +2221,6 @@
     </div>
   </div>
 
-  <!-- MODAL confirmar exclusão de conta -->
   <div class="conta-confirm-overlay" id="contaExcluirOverlay" onclick="contaFecharExcluir()">
     <div class="conta-confirm-box" onclick="event.stopPropagation()">
       <h3>⚠️ Excluir Conta</h3>
@@ -2285,8 +2234,6 @@
     </div>
   </div>
 
-
-  <!-- SCRIPT CONFIGURAÇÕES DE CONTA -->
   <script type="module">
     import { db, auth } from './firebase-config.js';
     import { doc, getDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js';
@@ -2314,7 +2261,6 @@
 
     window._contaUserData = null;
 
-    // ── Abrir modal ───────────────────────────────────────────────
     window.abrirContaModal = function(e) {
       if (e) e.preventDefault();
       const user = window._currentUser;
@@ -2324,13 +2270,11 @@
       document.getElementById('contaModalEmail').textContent = user.email;
       document.getElementById('contaInputEmail').value = user.email;
 
-      // Segurança — status
       const ev = user.emailVerified;
       document.getElementById('contaEmailDot').className = 'conta-status-dot ' + (ev?'ok':'warn');
       document.getElementById('contaEmailStatus').textContent = ev ? 'Verificado' : 'Não verificado';
       document.getElementById('contaEmailDesc').textContent = user.email + (ev ? '' : ' — pendente');
 
-      // Busca dados Firestore
       getDoc(doc(db, 'usuarios', user.uid)).then(snap => {
         const d = snap.exists() ? snap.data() : {};
         window._contaUserData = { ...d, uid: user.uid };
@@ -2340,7 +2284,6 @@
         document.getElementById('contaAvatar').textContent = iniciais(nome);
         document.getElementById('contaUltimoAcesso').textContent = fmtDate(d.ultimoAcesso);
         document.getElementById('contaCriadoEm').textContent = fmtDate(d.criadoEm);
-        // Atualiza último acesso
         updateDoc(doc(db,'usuarios',user.uid), {ultimoAcesso: new Date()}).catch(()=>{});
         window.contaCarregarPerfil();
         window.contaCarregarEnderecos();
@@ -2353,12 +2296,10 @@
       document.body.style.overflow = '';
     };
 
-    // Fechar ao clicar no overlay
     document.getElementById('contaOverlay').addEventListener('click', function(e) {
       if (e.target === this) window.fecharContaModal();
     });
 
-    // ── Perfil ────────────────────────────────────────────────────
     window.contaCarregarPerfil = function() {
       const d = window._contaUserData || {};
       document.getElementById('contaInputNome').value      = d.nome       || '';
@@ -2385,7 +2326,6 @@
         };
         await updateDoc(doc(db,'usuarios',uid), dados);
         window._contaUserData = {...window._contaUserData, ...dados};
-        // Atualiza sidebar do index
         const nome = dados.nome || 'Usuário';
         document.getElementById('contaModalTitle').textContent = nome;
         document.getElementById('contaAvatarNome').textContent  = nome;
@@ -2407,7 +2347,6 @@
       r.readAsDataURL(file);
     };
 
-    // ── Endereços ─────────────────────────────────────────────────
     window.contaCarregarEnderecos = function() {
       renderContaEnderecos((window._contaUserData?.enderecos) || []);
     };
@@ -2525,7 +2464,6 @@
       el.value = v;
     };
 
-    // ── Senha ─────────────────────────────────────────────────────
     document.getElementById('contaNovaSenha').addEventListener('input', function() {
       const v = this.value;
       const bar = document.getElementById('contaPwBarFill');
@@ -2570,7 +2508,6 @@
       btn.disabled=false; btn.textContent='Alterar Senha';
     };
 
-    // ── Notificações ──────────────────────────────────────────────
     window.contaCarregarNotificacoes = function() {
       const p = window._contaUserData?.notificacoes || {};
       document.getElementById('cNotifPedido').checked         = p.pedido         !== false;
@@ -2597,7 +2534,6 @@
       } catch(e) { showCF('contaFeedbackNotif','❌ Erro ao salvar.','error'); }
     };
 
-    // ── Excluir conta ─────────────────────────────────────────────
     window.contaAbrirExcluir  = () => document.getElementById('contaExcluirOverlay').classList.add('open');
     window.contaFecharExcluir = () => document.getElementById('contaExcluirOverlay').classList.remove('open');
     document.getElementById('contaExcluirOverlay').addEventListener('click', function(e){ if(e.target===this) window.contaFecharExcluir(); });
@@ -2623,14 +2559,13 @@
   </script>
 
   <script>
-    // Tabs da conta
     window.showContaTab = function(id, btn) {
       document.querySelectorAll('.conta-section').forEach(s=>s.classList.remove('active'));
       document.querySelectorAll('.conta-tab').forEach(b=>b.classList.remove('active'));
       document.getElementById('conta-section-'+id).classList.add('active');
       btn.classList.add('active');
     };
-    // Fechar com ESC
+
     document.addEventListener('keydown', function(e) {
       if (e.key==='Escape') {
         window.fecharContaModal && window.fecharContaModal();
