@@ -4,7 +4,6 @@ import {
   doc, getDocs, getDoc, query, where, orderBy
 } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
-// ── Tracking ──────────────────────────────────────────────────────────────────
 export async function registrarVisualizacao(produtoId) {
   try {
     await updateDoc(doc(db, "produtos", produtoId), {
